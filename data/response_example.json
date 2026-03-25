@@ -1,0 +1,1430 @@
+{
+    "analytics_id": "e99d646e3892218d4475fe3a480dc2d3",
+    "messages": [
+        [
+            {
+                "type": 0,
+                "content": "https://hackage.haskell.org/package/base-4.20.0.1/docs/Prelude.html#g:26",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [],
+                "timestamp": "2024-11-26T23:40:51.837000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1311114481996140617",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://learnyouahaskell.com/chapters",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [],
+                "timestamp": "2024-11-26T23:39:06.455000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1311114039992258612",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "Bueno como vamos a perder la clase pr\u00e1ctica de ma\u00f1ana... igualmente les paso un video de 2023s2, donde se ve fold sobre Pizza y otras estructuras: https://www.youtube.com/watch?v=180CO75klTY&ab_channel=FedericoAgustinSawadyO%27Connor",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=180CO75klTY",
+                        "title": "Fold sobre Pizza 2023s2",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/180CO75klTY/maxresdefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/hLkibnzjPHGM88VlFvpSlMiG6-MmE6hXF5-bzOEtwsM/https/i.ytimg.com/vi/180CO75klTY/maxresdefault.jpg",
+                            "width": 1280,
+                            "height": 720,
+                            "content_type": "image/jpeg",
+                            "placeholder": "kfcFBIJDd3d+eIhvd4zMBPjayg==",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/180CO75klTY",
+                            "width": 1280,
+                            "height": 720,
+                            "placeholder": "kfcFBIJDd3d+eIhvd4zMBPjayg==",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-10-21T18:29:04.458000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1297990054400102441",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://www.youtube.com/watch?v=xnRBafyS2Fk&ab_channel=FedericoAgustinSawadyO%27Connor",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=xnRBafyS2Fk",
+                        "title": "PF 2023s2 - NBin y Tree",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/xnRBafyS2Fk/sddefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/F7FpjfS__446YUTSbGRAnwxwvrjh8EfTaX9sdQE0et8/https/i.ytimg.com/vi/xnRBafyS2Fk/sddefault.jpg",
+                            "width": 640,
+                            "height": 480,
+                            "content_type": "image/jpeg",
+                            "placeholder": "C/gFDYB4eHdph3hhh4iHgGBW0/6b",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/xnRBafyS2Fk",
+                            "width": 1280,
+                            "height": 720,
+                            "placeholder": "C/gFDYB4eHdph3hhh4iHgGBW0/6b",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-10-15T23:30:43.583000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1295891640438882324",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/BJ8jD_DZ724",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=BJ8jD_DZ724",
+                        "title": "\u00c1rboles binarios",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/BJ8jD_DZ724/hqdefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/votwqU_cj3BNT8Umc8gXrvaPKplx2SqLCDANZyM-dhQ/https/i.ytimg.com/vi/BJ8jD_DZ724/hqdefault.jpg",
+                            "width": 480,
+                            "height": 360,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/BJ8jD_DZ724",
+                            "width": 1280,
+                            "height": 720,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-10-15T23:28:44.628000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1295891141505323120",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/s53PEy0wpk8",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=s53PEy0wpk8",
+                        "title": "2024 10 08 18 27 53 remuxed",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/s53PEy0wpk8/hqdefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/f9kI7fqZ6zuOSLCXMO89eQF7uO2k_YG2e5QT-VywfTM/https/i.ytimg.com/vi/s53PEy0wpk8/hqdefault.jpg",
+                            "width": 480,
+                            "height": 360,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/s53PEy0wpk8",
+                            "width": 1280,
+                            "height": 720,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-10-08T23:23:16.625000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1293353050701955074",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/UXJpeYDusew",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=UXJpeYDusew",
+                        "title": "2024 09 10 18 04 39",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/UXJpeYDusew/hqdefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/dKYVRtPAqEVozxbWuPmpeoCjSfJUvi3ItgnnyHupwKo/https/i.ytimg.com/vi/UXJpeYDusew/hqdefault.jpg",
+                            "width": 480,
+                            "height": 360,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/UXJpeYDusew",
+                            "width": 1280,
+                            "height": 720,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-09-10T23:16:02.551000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1283204369826709538",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/0sbBUGOe05g",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=0sbBUGOe05g",
+                        "title": "Clase Pr\u00e1ctica 1 - Modelo funcional - 20240827",
+                        "description": "Clase Pr\u00e1ctica 1 - Modelo funcional - 20240827",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/0sbBUGOe05g/hqdefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/eISrp0_xSDeWwKKbQ5zPnOSaoi-mv9IqULKw4JMKfbE/https/i.ytimg.com/vi/0sbBUGOe05g/hqdefault.jpg",
+                            "width": 480,
+                            "height": 360,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/0sbBUGOe05g",
+                            "width": 1280,
+                            "height": 720,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-08-27T23:14:53.775000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1278130651240988692",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/nxsKgymAg3U",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [],
+                "timestamp": "2024-06-25T23:28:36.291000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1255303665590468618",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://www.youtube.com/watch?v=aO1X0Ld74yM",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=aO1X0Ld74yM",
+                        "title": "PF 2023s2 - Fold de Pizza y [a]",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/aO1X0Ld74yM/sddefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/eLJU5hj1GJiEBXTJNrSFbYwPCEKVGMvo39PeVRkRBlQ/https/i.ytimg.com/vi/aO1X0Ld74yM/sddefault.jpg",
+                            "width": 640,
+                            "height": 480,
+                            "content_type": "image/jpeg",
+                            "placeholder": "GvgNBYDth4SHiHdChId3cDZ5cJ/3",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/aO1X0Ld74yM",
+                            "width": 1280,
+                            "height": 720,
+                            "placeholder": "GvgNBYDth4SHiHdChId3cDZ5cJ/3",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-06-11T23:22:14.097000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1250228632434245685",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://www.youtube.com/playlist?list=PLKjxZvBUjhtFET1HqRtTgP3z9yTXtgj6k",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "link",
+                        "url": "https://www.youtube.com/playlist?list=PLKjxZvBUjhtFET1HqRtTgP3z9yTXtgj6k",
+                        "title": "PF Pr\u00e1cticas",
+                        "provider": {
+                            "name": "YouTube"
+                        },
+                        "image": {
+                            "url": "https://i.ytimg.com/vi/c52TBBqjFuM/hqdefault.jpg?sqp=-oaymwEWCKgBEF5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLBCa9I6FkIVtFoVeUaOMJXn0-2CRA&days_since_epoch=19885",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/jf1aLDkzPvuJ_Y_0fhmrtgv75Bio9NaUReuvC_EHoGw/%3Fsqp%3D-oaymwEWCKgBEF5IWvKriqkDCQgBFQAAiEIYAQ%3D%3D%26rs%3DAOn4CLBCa9I6FkIVtFoVeUaOMJXn0-2CRA%26days_since_epoch%3D19885/https/i.ytimg.com/vi/c52TBBqjFuM/hqdefault.jpg",
+                            "width": 168,
+                            "height": 94,
+                            "content_type": "image/jpeg",
+                            "placeholder": "0PcFDIBomYlch4g/eFwweIX6uw==",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    },
+                    {
+                        "type": "rich",
+                        "url": "https://www.youtube.com/playlist?list=PLKjxZvBUjhtFET1HqRtTgP3z9yTXtgj6k",
+                        "image": {
+                            "url": "https://i.ytimg.com/vi/c52TBBqjFuM/hqdefault.jpg?sqp=-oaymwEWCMQBEG5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLD9O6q3t7xp7L-ZCCywtJyuaGG96w&days_since_epoch=19885",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/1csx6Uad7A2JW6kq1yup-i7a7pUvxLodQUxTHyX8A_k/%3Fsqp%3D-oaymwEWCMQBEG5IWvKriqkDCQgBFQAAiEIYAQ%3D%3D%26rs%3DAOn4CLD9O6q3t7xp7L-ZCCywtJyuaGG96w%26days_since_epoch%3D19885/https/i.ytimg.com/vi/c52TBBqjFuM/hqdefault.jpg",
+                            "width": 196,
+                            "height": 110,
+                            "content_type": "image/jpeg",
+                            "placeholder": "z/cFDIBoeKpdh4g/dl4wZ5X62w==",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    },
+                    {
+                        "type": "rich",
+                        "url": "https://www.youtube.com/playlist?list=PLKjxZvBUjhtFET1HqRtTgP3z9yTXtgj6k",
+                        "image": {
+                            "url": "https://i.ytimg.com/vi/c52TBBqjFuM/hqdefault.jpg?sqp=-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLBJlK3RcuLiC-dpxIbG1pwugTnQbw&days_since_epoch=19885",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/De4u6OyW5hNCu0Wa965wQNKwCARSSjN39kNtwDZQWnc/%3Fsqp%3D-oaymwEXCPYBEIoBSFryq4qpAwkIARUAAIhCGAE%3D%26rs%3DAOn4CLBJlK3RcuLiC-dpxIbG1pwugTnQbw%26days_since_epoch%3D19885/https/i.ytimg.com/vi/c52TBBqjFuM/hqdefault.jpg",
+                            "width": 246,
+                            "height": 138,
+                            "content_type": "image/jpeg",
+                            "placeholder": "0PcFDIBZmZpOh4k/aE4waJX67A==",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    },
+                    {
+                        "type": "rich",
+                        "url": "https://www.youtube.com/playlist?list=PLKjxZvBUjhtFET1HqRtTgP3z9yTXtgj6k",
+                        "image": {
+                            "url": "https://i.ytimg.com/vi/c52TBBqjFuM/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLAcW6QCiGE46ZT8OJW5dfXmL3yzNw&days_since_epoch=19885",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/P_33utMt7D8BeZyCjmNi5Flg5Ukubv2GWqW3o-TTj5w/%3Fsqp%3D-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE%3D%26rs%3DAOn4CLAcW6QCiGE46ZT8OJW5dfXmL3yzNw%26days_since_epoch%3D19885/https/i.ytimg.com/vi/c52TBBqjFuM/hqdefault.jpg",
+                            "width": 336,
+                            "height": 188,
+                            "content_type": "image/jpeg",
+                            "placeholder": "z/cFDIBpiJlch4hPd10waJX62w==",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-06-11T23:21:23.653000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1250228420856647751",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://effect.website/",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "article",
+                        "url": "https://effect.website/",
+                        "title": "Effect \u2013 The best way to build robust apps in TypeScript",
+                        "description": "Effect is a powerful TypeScript library designed to help developers easily create complex, synchronous, and asynchronous programs.",
+                        "thumbnail": {
+                            "url": "https://website-frdo0d6f7-effect-ts.vercel.app/opengraph-image.jpg?6fada1acf1f76e7e",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/DgmIS17ekDyEfZw2803I82XX4i0okHGYnKX74GBT6dw/%3F6fada1acf1f76e7e/https/website-frdo0d6f7-effect-ts.vercel.app/opengraph-image.jpg",
+                            "width": 2400,
+                            "height": 1260,
+                            "content_type": "image/jpeg",
+                            "placeholder": "xQcGBIAEqXlnioaBfXgYhwAAAA==",
+                            "placeholder_version": 1,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-06-11T22:36:15.093000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1250217060332732527",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://es.wikipedia.org/wiki/Problema_de_Monty_Hall",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "article",
+                        "url": "https://es.wikipedia.org/wiki/Problema_de_Monty_Hall",
+                        "title": "Problema de Monty Hall",
+                        "description": "El problema de Monty Hall o paradoja de Monty Hall es un problema matem\u00e1tico de probabilidad basado en el concurso televisivo estadounidense Trato hecho (Let's Make a Deal). El problema fue planteado y resuelto por el mat\u00e9matico Steve Selvin, en la revista American Statistician en 1975 y posteriormente popularizado por Marilyn vos Savant en Para...",
+                        "content_scan_version": 0
+                    }
+                ],
+                "timestamp": "2024-06-11T21:58:38.984000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1250207597525598259",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/DpAO_2tL1hc",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=DpAO_2tL1hc",
+                        "title": "Clase Pr\u00e1ctica PF - Lenguajes, \u00c1rboles Binarios y Estructuras como ...",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/DpAO_2tL1hc/hqdefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/o7Z35-XOxI8ZBJPO571t5QEqXrBcTF_DvJ_O5aqVKwo/https/i.ytimg.com/vi/DpAO_2tL1hc/hqdefault.jpg",
+                            "width": 480,
+                            "height": 360,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/DpAO_2tL1hc",
+                            "width": 1280,
+                            "height": 720,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-05-28T23:03:49.355000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1245150568692056145",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/JgFWogEyllI",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=JgFWogEyllI",
+                        "title": "Pr\u00e1ctica PF - Binario, Listas y Arboles - 2024 05 21 18 48 31",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/JgFWogEyllI/hqdefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/Wm-qAxTgb5L6HBafQYGFa0pPk94B4HcRG68p5TN9O8A/https/i.ytimg.com/vi/JgFWogEyllI/hqdefault.jpg",
+                            "width": 480,
+                            "height": 360,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/JgFWogEyllI",
+                            "width": 1280,
+                            "height": 720,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2024-05-21T23:06:33.046000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1242614540202414252",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/180CO75klTY",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [],
+                "timestamp": "2023-11-07T22:45:45.911000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1171581287681757204",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/PZ-rIzZDiLg",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [],
+                "timestamp": "2023-11-07T22:45:21.824000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1171581186653552701",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://www.youtube.com/watch?v=aO1X0Ld74yM&ab_channel=FedericoAgustinSawadyO%27Connor",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=aO1X0Ld74yM",
+                        "title": "PF 2023s2 - Fold de Pizza y [a]",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/aO1X0Ld74yM/sddefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/eLJU5hj1GJiEBXTJNrSFbYwPCEKVGMvo39PeVRkRBlQ/https/i.ytimg.com/vi/aO1X0Ld74yM/sddefault.jpg",
+                            "width": 640,
+                            "height": 480,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/aO1X0Ld74yM",
+                            "width": 1280,
+                            "height": 720,
+                            "flags": 0
+                        },
+                        "content_scan_version": 1
+                    }
+                ],
+                "timestamp": "2023-10-31T20:40:37.401000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1169013079649026149",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/e2dEiIHLHwU",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=e2dEiIHLHwU",
+                        "title": "Clase PF 2023s2 - Inducci\u00f3n estructural",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/e2dEiIHLHwU/sddefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/hXK3zN56Hxdq3zWuXNn56tEyfhC8-oV5YlUAY2hZTPo/https/i.ytimg.com/vi/e2dEiIHLHwU/sddefault.jpg",
+                            "width": 640,
+                            "height": 480,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/e2dEiIHLHwU",
+                            "width": 1280,
+                            "height": 536,
+                            "flags": 0
+                        }
+                    }
+                ],
+                "timestamp": "2023-10-10T23:38:20.580000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1161447659085766676",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/1GN_bqGCIvg",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=1GN_bqGCIvg",
+                        "title": "M\u00f3nadas - PF 2023s1",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/1GN_bqGCIvg/maxresdefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/9tuvWUuemDtUnokGlAQz4TQcPe4NiNYXcmVvKjcCms0/https/i.ytimg.com/vi/1GN_bqGCIvg/maxresdefault.jpg",
+                            "width": 1280,
+                            "height": 720,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/1GN_bqGCIvg",
+                            "width": 1280,
+                            "height": 720,
+                            "flags": 0
+                        }
+                    }
+                ],
+                "timestamp": "2023-07-12T03:13:57.440000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1128524624439803954",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "http://learnyouahaskell.com/functors-applicative-functors-and-monoids",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [],
+                "timestamp": "2023-06-27T23:30:19.380000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1123394914898690168",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "http://learnyouahaskell.com/making-our-own-types-and-typeclasses",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [],
+                "timestamp": "2023-06-27T23:29:44.068000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1123394766789415032",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "http://learnyouahaskell.com/types-and-typeclasses",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [],
+                "timestamp": "2023-06-27T23:29:35.327000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1123394730126999633",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://youtu.be/BsZhkMlTmdQ",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "video",
+                        "url": "https://www.youtube.com/watch?v=BsZhkMlTmdQ",
+                        "title": "2022 11 24 18 04 50",
+                        "color": 16711680,
+                        "author": {
+                            "name": "Federico Agustin Sawady O'Connor",
+                            "url": "https://www.youtube.com/channel/UCSEZy1NK1Q1jbCj1cptmFRg"
+                        },
+                        "provider": {
+                            "name": "YouTube",
+                            "url": "https://www.youtube.com"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/BsZhkMlTmdQ/hqdefault.jpg",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/AickC4bgmwaJJpK6fun7k_GPJu1z88bu1-ZdAH02KQs/https/i.ytimg.com/vi/BsZhkMlTmdQ/hqdefault.jpg",
+                            "width": 480,
+                            "height": 360,
+                            "flags": 0
+                        },
+                        "video": {
+                            "url": "https://www.youtube.com/embed/BsZhkMlTmdQ",
+                            "width": 1280,
+                            "height": 720,
+                            "flags": 0
+                        }
+                    }
+                ],
+                "timestamp": "2022-11-24T23:17:36.738000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1045478325042290780",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ],
+        [
+            {
+                "type": 0,
+                "content": "https://www.youtube.com/playlist?list=PLKjxZvBUjhtFET1HqRtTgP3z9yTXtgj6k",
+                "mentions": [],
+                "mention_roles": [],
+                "attachments": [],
+                "embeds": [
+                    {
+                        "type": "link",
+                        "url": "https://www.youtube.com/playlist?list=PLKjxZvBUjhtFET1HqRtTgP3z9yTXtgj6k",
+                        "title": "PF Pr\u00e1cticas",
+                        "provider": {
+                            "name": "YouTube"
+                        },
+                        "thumbnail": {
+                            "url": "https://i.ytimg.com/vi/c52TBBqjFuM/hqdefault.jpg?sqp=-oaymwEWCKgBEF5IWvKriqkDCQgBFQAAiEIYAQ==&rs=AOn4CLBCa9I6FkIVtFoVeUaOMJXn0-2CRA&days_since_epoch=19290",
+                            "proxy_url": "https://images-ext-1.discordapp.net/external/mwvCGXmIeWDcaKGdQ9eqV9rq_apK8dn0INwjzpqv_x8/%3Fsqp%3D-oaymwEWCKgBEF5IWvKriqkDCQgBFQAAiEIYAQ%3D%3D%26rs%3DAOn4CLBCa9I6FkIVtFoVeUaOMJXn0-2CRA%26days_since_epoch%3D19290/https/i.ytimg.com/vi/c52TBBqjFuM/hqdefault.jpg",
+                            "width": 168,
+                            "height": 94,
+                            "content_type": "image/jpeg",
+                            "flags": 0
+                        }
+                    }
+                ],
+                "timestamp": "2022-10-25T18:56:30.533000+00:00",
+                "edited_timestamp": null,
+                "flags": 0,
+                "components": [],
+                "id": "1034540980248002644",
+                "channel_id": "746866326072721539",
+                "author": {
+                    "id": "518498004584497183",
+                    "username": "fsawady",
+                    "avatar": "e99e11337005178dbcd27e6a78149005",
+                    "discriminator": "0",
+                    "public_flags": 0,
+                    "flags": 0,
+                    "banner": null,
+                    "accent_color": null,
+                    "global_name": "Federico Sawady O'Connor",
+                    "avatar_decoration_data": null,
+                    "collectibles": null,
+                    "display_name_styles": null,
+                    "banner_color": null,
+                    "clan": null,
+                    "primary_guild": null
+                },
+                "pinned": false,
+                "mention_everyone": false,
+                "tts": false,
+                "hit": true
+            }
+        ]
+    ],
+    "doing_deep_historical_index": false,
+    "total_results": 107
+}

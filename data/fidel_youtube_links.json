@@ -1,0 +1,114 @@
+[
+  {
+    "clase_numero": 1,
+    "titulo": "1ra Clase Teórica de PF - Modelo funcional. Alto orden.",
+    "link": "https://www.youtube.com/watch?v=Pz47EBmPQ_Y",
+    "duracion": "3:12:17",
+    "vistas": "816 visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 2,
+    "titulo": "2da Clase Teórica de PF - Sistemas de tipos",
+    "link": "https://www.youtube.com/watch?v=JfOLCYikP-g",
+    "duracion": "2:33:11",
+    "vistas": "337 visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 3,
+    "titulo": "3ra Clase Teórica de PF - Currificación",
+    "link": "https://www.youtube.com/watch?v=9D8ypJHlqyA",
+    "duracion": "2:48:57",
+    "vistas": "310 visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 4,
+    "titulo": "4ta Clase Teórica de PF - Reducción",
+    "link": "https://www.youtube.com/watch?v=u_Q1dP2g5FQ",
+    "duracion": "2:38:52",
+    "vistas": "1,4 K visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 5,
+    "titulo": "5ta Clase Teórica de PF - Tipos algebraicos",
+    "link": "https://www.youtube.com/watch?v=Alk-x0Grs6g",
+    "duracion": "3:00:38",
+    "vistas": "319 visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 6,
+    "titulo": "6ta Clase Teórica de PF - Propiedades y demostraciones",
+    "link": "https://www.youtube.com/watch?v=2hcG4sW72t4",
+    "duracion": "2:06:15",
+    "vistas": "271 visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 7,
+    "titulo": "7ma Clase Teórica de PF - Inducción/Recursión I",
+    "link": "https://www.youtube.com/watch?v=ssljsu_vm9A",
+    "duracion": "3:10:38",
+    "vistas": "383 visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 8,
+    "titulo": "8va Clase Teórica de PF - Inducción/Recursión II",
+    "link": "https://www.youtube.com/watch?v=5P_NQA_Re8Q",
+    "duracion": "3:43:39",
+    "vistas": "433 visualizaciones",
+    "emision": "hace 5 años"
+  },
+  {
+    "clase_numero": 9,
+    "titulo": "9na Clase Teórica de PF - Inducción/Recursión III",
+    "link": "https://www.youtube.com/watch?v=9CIqSAVran8",
+    "duracion": "3:11:13",
+    "vistas": "1,2 K visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 10,
+    "titulo": "10ma Clase Teórica de PF - Inducción/Recursión IV",
+    "link": "https://www.youtube.com/watch?v=B6D2rkBw1uo",
+    "duracion": "3:27:31",
+    "vistas": "1,2 K visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 11,
+    "titulo": "11ra Clase Teórica de PF - Esquemas de funciones I",
+    "link": "https://www.youtube.com/watch?v=OrrzkDNzVW8",
+    "duracion": "3:45:50",
+    "vistas": "1,4 K visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 12,
+    "titulo": "12da Clase Teórica de PF - Esquemas de funciones II",
+    "link": "https://www.youtube.com/watch?v=L3gU250guP4",
+    "duracion": "3:05:58",
+    "vistas": "1,1 K visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 13,
+    "titulo": "13ra Clase Teórica de PF - Mónadas",
+    "link": "https://www.youtube.com/watch?v=FaLO_tlI4oI",
+    "duracion": "4:20:51",
+    "vistas": "766 visualizaciones",
+    "emision": "hace 4 años"
+  },
+  {
+    "clase_numero": 14,
+    "titulo": "14ta Clase Teórica de PF - Lambda cálculo",
+    "link": "https://www.youtube.com/watch?v=28QX5EUabDQ",
+    "duracion": "3:34:54",
+    "vistas": "620 visualizaciones",
+    "emision": "hace 4 años"
+  }
+]
