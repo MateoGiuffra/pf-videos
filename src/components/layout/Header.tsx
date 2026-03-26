@@ -2,7 +2,7 @@
 
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
 import { logoutAction } from '@/app/actions/auth';
-import { LogOut, User, HelpCircle } from 'lucide-react';
+import { LogOut, User, HelpCircle, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 interface HeaderProps {
@@ -31,6 +31,14 @@ export function Header({ username }: HeaderProps) {
             </div>
           )}
           
+          <Link 
+            href="/resources" 
+            className="p-2.5 rounded-xl text-brand-ink-soft dark:text-dark-ink-soft hover:bg-brand-bg-2 dark:hover:bg-dark-bg-2 border border-transparent hover:border-brand-stroke dark:hover:border-dark-stroke transition-all"
+            title="Recursos"
+          >
+            <FileText className="w-5 h-5" />
+          </Link>
+
           <Link 
             href="/info" 
             className="p-2.5 rounded-xl text-brand-ink-soft dark:text-dark-ink-soft hover:bg-brand-bg-2 dark:hover:bg-dark-bg-2 border border-transparent hover:border-brand-stroke dark:hover:border-dark-stroke transition-all"

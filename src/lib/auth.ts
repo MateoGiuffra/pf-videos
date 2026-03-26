@@ -31,6 +31,11 @@ export async function login(username: string, password: string) {
 
     if (!logintoken) throw new Error("No se pudo obtener el token de sesión.");
 
+    // Extract cookies to maintain session
+    const moodleCookies = loginPageRes.headers.getSetCookie()
+      .map(c => c.split(';')[0])
+      .join('; ');
+
     // 2. Perform login
     const loginRes = await fetch(`${AULAS_URL}/login/index.php`, {
       method: "POST",
@@ -39,6 +44,7 @@ export async function login(username: string, password: string) {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
         "Referer": `${AULAS_URL}/login/index.php`,
         "Host": new URL(AULAS_URL).host,
+        "Cookie": moodleCookies,
       },
       body: new URLSearchParams({
         logintoken: logintoken as string,
@@ -47,32 +53,54 @@ export async function login(username: string, password: string) {
       }),
       redirect: "manual",
     });
-
     // Check for success (redirect to dashboard)
     if (loginRes.status === 303 || loginRes.status === 302) {
-      // 3. Generate JWT
-      const token = await new jose.SignJWT({ username })
-        .setProtectedHeader({ alg: 'HS256' })
-        .setIssuedAt()
-        .setExpirationTime('24h')
-        .sign(JWT_SECRET);
+      const location = loginRes.headers.get("location") || "";
+      const isHome = location.includes("testsession");
 
-      const cookieStore = await cookies();
-      cookieStore.set('auth_token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24, // 24 hours
-      });
+      if (isHome) {
+        // 3. Generate JWT
+        const token = await new jose.SignJWT({ username })
+          .setProtectedHeader({ alg: 'HS256' })
+          .setIssuedAt()
+          .setExpirationTime('24h')
+          .sign(JWT_SECRET);
 
-      return { success: true };
+        const cookieStore = await cookies();
+        cookieStore.set('auth_token', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 60 * 60 * 24, // 24 hours
+        });
+
+        // Store Moodle session cookie for scraping
+        const finalCookies = loginRes.headers.getSetCookie();
+        const moodleSession = finalCookies.find(c => c.trim().startsWith('MoodleSession'));
+        if (moodleSession) {
+          const sessionValue = moodleSession.split(';')[0];
+          cookieStore.set('moodle_session', sessionValue, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 2, // 2 hours (typical Moodle session)
+          });
+        }
+
+        return { success: true };
+      }
     }
+
+    // If we land here, it's a failure. Always clear the cookies.
+    const cookieStore = await cookies();
+    cookieStore.delete('auth_token');
+    cookieStore.delete('moodle_session');
 
     // If we land back on 200, it's likely a login error
     const errorHtml = await loginRes.text();
     const $err = cheerio.load(errorHtml);
     const serverError = $err('.alert-danger, #loginerrormessage').text().trim();
-    
+
     if (serverError) {
       throw new Error(`Aulas CPI dice: ${serverError}`);
     }
@@ -80,6 +108,15 @@ export async function login(username: string, password: string) {
     throw new Error("No se pudo iniciar sesión. Verifica el usuario/contraseña o la conexión.");
   } catch (error: any) {
     console.error(`[Auth Detail] Fetch error for ${AULAS_URL}:`, error);
+
+    // Clear cookie on any exception as well
+    try {
+      const cookieStore = await cookies();
+      cookieStore.delete('auth_token');
+    } catch (e) {
+      // Ignore errors deleting cookies in edge-case catch blocks
+    }
+
     if (error.message.includes('fetch failed')) {
       return { success: false, error: `Error de conexión: No se pudo alcanzar Aulas CPI (${AULAS_URL}). Verifica la URL y que el servidor sea accesible.` };
     }
@@ -90,6 +127,7 @@ export async function login(username: string, password: string) {
 export async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete('auth_token');
+  cookieStore.delete('moodle_session');
 }
 
 export async function verifyAuth() {
