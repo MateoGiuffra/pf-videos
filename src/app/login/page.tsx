@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { loginAction } from '@/app/actions/auth';
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
-import { Loader2, Info } from 'lucide-react';
+import { Loader2, Info, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(formData: FormData) {
     setIsPending(true);
@@ -23,7 +24,9 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
-      <ThemeToggle />
+      <div className="fixed top-4 right-4 hidden sm:block">
+        <ThemeToggle />
+      </div>
       
       <div className="w-full max-w-[420px] animate-in fade-in slide-in-from-bottom-5 duration-500">
         <div className="bg-brand-card dark:bg-dark-card border border-brand-stroke dark:border-dark-stroke rounded-2xl p-8 backdrop-blur-md shadow-2xl relative overflow-hidden">
@@ -72,14 +75,28 @@ export default function LoginPage() {
               <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-brand-ink dark:text-dark-ink">
                 Contraseña
               </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                required
-                placeholder="Tu contraseña de Aulas CPI"
-                className="w-full bg-white dark:bg-dark-bg-2 border border-brand-stroke dark:border-dark-stroke rounded-xl p-3 text-sm text-brand-ink dark:text-dark-ink placeholder:text-brand-ink-soft/40 dark:placeholder:text-dark-ink-soft/50 focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent dark:focus:border-dark-accent transition-all shadow-sm"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  required
+                  placeholder="Tu contraseña de Aulas CPI"
+                  className="w-full bg-white dark:bg-dark-bg-2 border border-brand-stroke dark:border-dark-stroke rounded-xl p-3 pr-10 text-sm text-brand-ink dark:text-dark-ink placeholder:text-brand-ink-soft/40 dark:placeholder:text-dark-ink-soft/50 focus:outline-none focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent dark:focus:border-dark-accent transition-all shadow-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-ink dark:hover:text-dark-ink transition-colors"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
             <button
