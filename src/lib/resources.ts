@@ -65,10 +65,10 @@ export function parseResourcesHtml(html: string): Section[] {
   $resources.each((_, resourceElem) => {
     const $res = $(resourceElem);
     const $link = $res.find('a.aalink.stretched-link');
-    const url = $link.attr('href') || '';
+    let url = $link.attr('href') || '';
     
     if (!url) return;
-
+    url = `${url}&redirect=1`;
     // Extract title and clean it
     const $instanceName = $res.find('.instancename');
     let title = '';

@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { Search, BookOpen, PenTool, ExternalLink, LayoutGrid, List, File, Download, ArrowRight, CornerDownRight } from 'lucide-react';
 import { Section, Resource } from '@/lib/resources';
 import { clsx } from 'clsx';
+import { ResourceSection } from './ResourceSection';
 
 interface ResourcesListProps {
   initialSections: Section[];
@@ -19,9 +20,14 @@ export function ResourcesList({ initialSections }: ResourcesListProps) {
   }, [initialSections]);
 
   const filteredResources = useMemo(() => {
+    const normalize = (str: string) => 
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    
+    const searchTerm = normalize(search);
+    
     return allResources.filter(r => {
-      const matchesSearch = r.title.toLowerCase().includes(search.toLowerCase()) || 
-                           r.unit.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch = normalize(r.title).includes(searchTerm) || 
+                           normalize(r.unit).includes(searchTerm);
       const matchesTab = activeTab === 'all' || r.type === activeTab;
       return matchesSearch && matchesTab;
     });
@@ -86,7 +92,7 @@ export function ResourcesList({ initialSections }: ResourcesListProps) {
       </div>
 
       {/* Modern Tabs */}
-      <div className="flex justify-center -mb-4">
+      <div className="flex justify-center">
         <div className="flex p-1.5 bg-brand-bg-2/50 dark:bg-dark-bg-2/50 rounded-[2rem] border border-brand-stroke/30 dark:border-dark-stroke/30 backdrop-blur-md">
           {[
             { id: 'all', label: 'Todos', icon: File },
@@ -114,100 +120,16 @@ export function ResourcesList({ initialSections }: ResourcesListProps) {
       </div>
 
       {/* Content Area */}
-      <div className="space-y-20 pb-20">
+      <div className="space-y-6 pb-20">
         {units.length > 0 ? (
           units.map((unitTitle, unitIdx) => (
-            <section key={unitTitle} className="animate-in fade-in slide-in-from-bottom-12 duration-1000" style={{ animationDelay: `${unitIdx * 100}ms` }}>
-              <div className="flex flex-col gap-2 mb-10 pl-4 border-l-4 border-brand-accent">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-accent">Sección del Curso</span>
-                <h2 className="text-3xl font-serif font-black text-brand-ink dark:text-dark-ink tracking-tight">
-                  {unitTitle}
-                </h2>
-              </div>
-
-              <div className={clsx(
-                viewMode === 'grid' 
-                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" 
-                  : "flex flex-col gap-4 max-w-5xl mx-auto"
-              )}>
-                {groupedByUnit[unitTitle].map((resource, resIdx) => (
-                  <a
-                    key={resource.id}
-                    href={resource.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={clsx(
-                      "group relative transition-all duration-500",
-                      viewMode === 'grid' 
-                        ? "bg-white/40 dark:bg-dark-card/40 backdrop-blur-sm border border-brand-stroke/40 dark:border-dark-stroke/40 rounded-[2rem] p-8 hover:bg-white dark:hover:bg-dark-card hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:-translate-y-2" 
-                        : "bg-white/40 dark:bg-dark-card/40 backdrop-blur-sm border border-brand-stroke/40 dark:border-dark-stroke/40 rounded-2xl p-5 flex items-center justify-between hover:bg-white dark:hover:bg-dark-card hover:shadow-xl hover:translate-x-2"
-                    )}
-                  >
-                    <div className={clsx("flex items-center gap-6", viewMode === 'list' && "flex-1")}>
-                      <div className={clsx(
-                        "rounded-[1.25rem] flex items-center justify-center transition-all duration-700 shadow-lg",
-                        resource.type === 'practice' 
-                          ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white group-hover:rotate-[15deg] group-hover:scale-110" 
-                          : resource.type === 'theory'
-                          ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white group-hover:rotate-[15deg] group-hover:scale-110"
-                          : "bg-teal-500/10 text-teal-600 dark:text-teal-400 group-hover:bg-teal-600 group-hover:text-white group-hover:rotate-[15deg] group-hover:scale-110",
-                        viewMode === 'grid' ? "w-16 h-16" : "w-12 h-12"
-                      )}>
-                        {resource.type === 'practice' ? <PenTool className="w-8 h-8" /> : 
-                         resource.type === 'theory' ? <BookOpen className="w-8 h-8" /> : 
-                         <File className="w-8 h-8" />}
-                      </div>
-                      
-                      <div className="flex-1 min-w-0">
-                        {resource.unit !== unitTitle && viewMode === 'grid' && (
-                          <div className="flex items-center gap-1.5 mb-2 opacity-50">
-                             <CornerDownRight className="w-3 h-3" />
-                             <span className="text-[10px] font-bold uppercase tracking-widest">{resource.unit.split(' - ').pop()}</span>
-                          </div>
-                        )}
-                        <h3 className="text-lg font-bold text-brand-ink dark:text-dark-ink group-hover:text-brand-accent transition-colors leading-snug line-clamp-2 pr-4">
-                          {resource.title}
-                        </h3>
-                        {viewMode === 'grid' && (
-                          <div className="mt-4 flex items-center justify-between">
-                            <span className={clsx(
-                              "text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border",
-                              resource.type === 'practice' 
-                                ? "border-blue-500/20 text-blue-600 bg-blue-500/5" 
-                                : "border-purple-500/20 text-purple-600 bg-purple-500/5"
-                            )}>
-                              {resource.type === 'practice' ? 'Práctica' : 'Teoría'}
-                            </span>
-                            <div className="flex items-center gap-2 text-brand-accent font-black text-[10px] uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-2 group-hover:translate-x-0">
-                               Ver Archivo <ArrowRight className="w-3 h-3" />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className={clsx(
-                      "transition-all duration-500",
-                      viewMode === 'grid' 
-                        ? "absolute top-8 right-8 p-2 bg-brand-bg-2/50 dark:bg-dark-bg-2/50 rounded-lg opacity-0 group-hover:opacity-100 group-hover:scale-110" 
-                        : "flex items-center gap-4 pr-2"
-                    )}>
-                      {viewMode === 'list' && (
-                        <span className={clsx(
-                          "text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border hidden sm:block",
-                          resource.type === 'practice' 
-                            ? "border-blue-500/20 text-blue-600 bg-blue-500/5 " 
-                            : "border-purple-500/20 text-purple-600 bg-purple-500/5"
-                        )}>
-                          {resource.type === 'practice' ? 'Práctica' : 'Teoría'}
-                        </span>
-                      )}
-                      <Download className="w-5 h-5 text-brand-accent group-hover:animate-bounce" />
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </section>
+            <ResourceSection
+              key={unitTitle}
+              unitTitle={unitTitle}
+              resources={groupedByUnit[unitTitle]}
+              viewMode={viewMode}
+              index={unitIdx}
+            />
           ))
         ) : (
           <div className="relative overflow-hidden py-32 flex flex-col items-center justify-center bg-brand-bg-2/30 dark:bg-dark-bg-2/30 rounded-[3rem] border-2 border-dashed border-brand-stroke dark:border-dark-stroke animate-in zoom-in-95 duration-700">
