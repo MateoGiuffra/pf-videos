@@ -71,20 +71,34 @@ export async function login(username: string, password: string) {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
-          maxAge: 60 * 60 * 24, // 24 hours
+          // No maxAge/expires makes it a session cookie
         });
 
-        // Store Moodle session cookie for scraping
+        // Store Moodle cookies for scraping and downloads
         const finalCookies = loginRes.headers.getSetCookie();
-        const moodleSession = finalCookies.find(c => c.trim().startsWith('MoodleSession'));
-        if (moodleSession) {
-          const sessionValue = moodleSession.split(';')[0];
-          cookieStore.set('moodle_session', sessionValue, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 60 * 60 * 2, // 2 hours (typical Moodle session)
-          });
+        for (const cookie of finalCookies) {
+          const parts = cookie.split(';');
+          const nameValue = parts[0];
+          const [name, value] = nameValue.split('=');
+          const trimmedName = name.trim();
+          
+          if (trimmedName.startsWith('MoodleSession') || trimmedName.startsWith('MOODLEID')) {
+             // 1. Store as original name for proxy reference
+             cookieStore.set(`moodle_c_${trimmedName}`, value, {
+              httpOnly: true,
+              secure: process.env.NODE_ENV === 'production',
+              sameSite: 'lax',
+            });
+
+            // 2. Also keep our standardized 'moodle_session' for verifyAuth logic
+            if (trimmedName.startsWith('MoodleSession')) {
+              cookieStore.set('moodle_session', value, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+              });
+            }
+          }
         }
 
         return { success: true };
@@ -128,13 +142,23 @@ export async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete('auth_token');
   cookieStore.delete('moodle_session');
+  
+  // Clear all other moodle cookies
+  const allCookies = cookieStore.getAll();
+  allCookies.forEach(c => {
+    if (c.name.startsWith('moodle_c_')) {
+      cookieStore.delete(c.name);
+    }
+  });
 }
 
 export async function verifyAuth() {
   const cookieStore = await cookies();
   const token = cookieStore.get('auth_token')?.value;
+  const moodleSession = cookieStore.get('moodle_session')?.value;
 
-  if (!token) return null;
+  // We require BOTH a valid JWT AND a Moodle session cookie to be considered "logged in"
+  if (!token || !moodleSession) return null;
 
   try {
     const { payload } = await jose.jwtVerify(token, JWT_SECRET);

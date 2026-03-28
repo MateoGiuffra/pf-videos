@@ -8,11 +8,13 @@ const JWT_SECRET = new TextEncoder().encode(ENV.JWT_SECRET);
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get('auth_token')?.value;
+  const moodleSession = request.cookies.get('moodle_session')?.value;
   const { pathname } = request.nextUrl;
 
   // Paths that don't require authentication
   if (pathname.startsWith('/login') || pathname.startsWith('/api/auth')) {
-    if (token) {
+    // If we have both cookies, we consider the user already logged in
+    if (token && moodleSession) {
       try {
         await jose.jwtVerify(token, JWT_SECRET);
         return NextResponse.redirect(new URL('/', request.url));
@@ -24,7 +26,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Protect all other routes
-  if (!token) {
+  if (!token || !moodleSession) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 

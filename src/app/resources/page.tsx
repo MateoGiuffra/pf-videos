@@ -20,10 +20,15 @@ export default async function ResourcesPage() {
   let sections: Section[] = [];
   try {
     sections = await scrapeResources(moodleSession);
-  } catch (error) {
+  } catch (error: any) {
     console.error('[Resources Page Fetch Error]:', error);
-    // In dev, if scraping fails (e.g. no internet or session expired), 
-    // we could show a fallback or error message.
+    // If Moodle session expired, redirect to login
+    if (error.message?.includes('expirado') || error.message?.includes('expired') || error.message?.includes('sesión')) {
+      const cookieStore = await cookies();
+      cookieStore.delete('auth_token');
+      cookieStore.delete('moodle_session');
+      redirect('/login');
+    }
   }
 
   return (
