@@ -167,3 +167,38 @@ export async function verifyAuth() {
     return null;
   }
 }
+
+/**
+ * Returns true if the current Moodle session belongs to the admin user.
+ * Fetches /user/profile.php and compares the h1 against ADMIN_MOODLE_NAME env var.
+ */
+export async function checkIsAdmin(): Promise<boolean> {
+  const adminName = ENV.ADMIN_MOODLE_NAME;
+  if (!adminName) return false;
+
+  try {
+    const cookieStore = await cookies();
+    const moodleSession = cookieStore.get('moodle_session')?.value;
+    if (!moodleSession) return false;
+
+    const res = await fetch(`${AULAS_URL}/user/profile.php`, {
+      headers: {
+        Cookie: `MoodleSession=${moodleSession}`,
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      },
+      // Cache for 60s to avoid re-fetching on fast navigations
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) return false;
+
+    const html = await res.text();
+    const $ = cheerio.load(html);
+    const h1Text = $('h1').first().text().trim();
+
+    return h1Text === adminName;
+  } catch {
+    return false;
+  }
+}
+

@@ -22,9 +22,11 @@ export async function scrapeResources(moodleSessionCookie?: string): Promise<Sec
   try {
     // 1. Fetch course page
     const courseUrl = `${AULAS_URL}/course/view.php?id=${COURSE_ID}`;
+    console.log(`[Scraper] Fetching resources with session: ${moodleSessionCookie ? moodleSessionCookie.substring(0, 10) + '...' : 'NONE'}`);
+    
     const response = await fetch(courseUrl, {
       headers: {
-        'Cookie': moodleSessionCookie || '',
+        'Cookie': moodleSessionCookie ? `MoodleSession=${moodleSessionCookie}` : '',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36',
       },
     });

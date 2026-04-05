@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Search, BookOpen, PenTool, ExternalLink, LayoutGrid, List, File, Download, ArrowRight, CornerDownRight } from 'lucide-react';
 import { Section, Resource } from '@/lib/resources';
 import { clsx } from 'clsx';
@@ -14,6 +14,11 @@ export function ResourcesList({ initialSections }: ResourcesListProps) {
   const [activeTab, setActiveTab] = useState<'all' | 'practice' | 'theory'>('all');
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [pdfViewer, setPdfViewer] = useState<{ url: string; title: string } | null>(null);
+
+  const onViewPDF = useCallback((url: string, title: string) => {
+    setPdfViewer({ url, title });
+  }, []);
 
   const allResources = useMemo(() => {
     return initialSections.flatMap(s => s.resources);
@@ -129,6 +134,7 @@ export function ResourcesList({ initialSections }: ResourcesListProps) {
               resources={groupedByUnit[unitTitle]}
               viewMode={viewMode}
               index={unitIdx}
+              onViewPDF={onViewPDF}
             />
           ))
         ) : (
@@ -151,6 +157,33 @@ export function ResourcesList({ initialSections }: ResourcesListProps) {
           </div>
         )}
       </div>
+      {/* PDF Viewer Modal */}
+      {pdfViewer && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          onClick={() => setPdfViewer(null)}
+        >
+          <div
+            className="relative bg-white dark:bg-dark-card rounded-3xl overflow-hidden shadow-2xl w-full max-w-5xl h-[90vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-6 py-4 border-b border-brand-stroke/30 dark:border-dark-stroke/30">
+              <span className="font-bold text-brand-ink dark:text-dark-ink truncate">{pdfViewer.title}</span>
+              <button
+                onClick={() => setPdfViewer(null)}
+                className="ml-4 p-2 rounded-xl hover:bg-brand-bg-2 dark:hover:bg-dark-bg-2 text-brand-ink-soft transition-colors"
+              >
+                ✕
+              </button>
+            </div>
+            <iframe
+              src={pdfViewer.url}
+              className="flex-1 w-full"
+              title={pdfViewer.title}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

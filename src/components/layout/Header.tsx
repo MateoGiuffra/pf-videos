@@ -2,14 +2,34 @@
 
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
 import { logoutAction } from '@/app/actions/auth';
-import { LogOut, User, HelpCircle, FileText } from 'lucide-react';
+import { LogOut, User, HelpCircle, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
+import { useState } from 'react';
 
 interface HeaderProps {
   username?: string;
+  isAdmin?: boolean;
 }
 
-export function Header({ username }: HeaderProps) {
+export function Header({ username, isAdmin }: HeaderProps) {
+  const [syncing, setSyncing] = useState(false);
+  const [syncResult, setSyncResult] = useState<'ok' | 'error' | null>(null);
+
+  async function handleSync() {
+    setSyncing(true);
+    setSyncResult(null);
+    try {
+      const res = await fetch('/api/admin/resources', { method: 'POST' });
+      setSyncResult(res.ok ? 'ok' : 'error');
+    } catch {
+      setSyncResult('error');
+    } finally {
+      setSyncing(false);
+      // Reset badge after 3 s
+      setTimeout(() => setSyncResult(null), 3000);
+    }
+  }
+
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-brand-bg-1/80 dark:bg-dark-bg-1/80 border-b border-brand-stroke dark:border-dark-stroke shadow-sm py-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -23,24 +43,40 @@ export function Header({ username }: HeaderProps) {
           </div>
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {username && (
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-brand-bg-2 dark:bg-dark-bg-2 rounded-full border border-brand-stroke dark:border-dark-stroke">
               <User className="w-4 h-4 text-brand-accent" />
               <span className="text-sm font-medium text-brand-ink dark:text-dark-ink">{username}</span>
             </div>
           )}
-          
-          <Link 
-            href="/resources" 
-            className="p-2.5 rounded-xl text-brand-ink-soft dark:text-dark-ink-soft hover:bg-brand-bg-2 dark:hover:bg-dark-bg-2 border border-transparent hover:border-brand-stroke dark:hover:border-dark-stroke transition-all"
-            title="Recursos"
-          >
-            <FileText className="w-5 h-5" />
-          </Link>
 
-          <Link 
-            href="/info" 
+          {/* Admin sync button — only visible to admin */}
+          {isAdmin && (
+            <button
+              onClick={handleSync}
+              disabled={syncing}
+              title="Actualizar material de Drive"
+              className={[
+                'flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all border shadow-sm',
+                syncing
+                  ? 'bg-brand-accent/10 dark:bg-dark-accent/10 text-brand-accent border-brand-accent/30 cursor-wait'
+                  : syncResult === 'ok'
+                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+                  : syncResult === 'error'
+                  ? 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30'
+                  : 'bg-brand-bg-2 dark:bg-dark-bg-2 text-brand-ink-soft dark:text-dark-ink-soft border-brand-stroke dark:border-dark-stroke hover:text-brand-accent hover:border-brand-accent/40 hover:shadow-md',
+              ].join(' ')}
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${syncing ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">
+                {syncing ? 'Sincronizando…' : syncResult === 'ok' ? '¡Listo!' : syncResult === 'error' ? 'Error' : 'Actualizar'}
+              </span>
+            </button>
+          )}
+
+          <Link
+            href="/info"
             className="p-2.5 rounded-xl text-brand-ink-soft dark:text-dark-ink-soft hover:bg-brand-bg-2 dark:hover:bg-dark-bg-2 border border-transparent hover:border-brand-stroke dark:hover:border-dark-stroke transition-all"
             title="Información"
           >
