@@ -9,9 +9,10 @@ import { useState } from 'react';
 interface HeaderProps {
   username?: string;
   isAdmin?: boolean;
+  admin?: string;
 }
 
-export function Header({ username, isAdmin }: HeaderProps) {
+export function Header({ username, isAdmin, admin }: HeaderProps) {
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState<'ok' | 'error' | null>(null);
 
@@ -19,7 +20,11 @@ export function Header({ username, isAdmin }: HeaderProps) {
     setSyncing(true);
     setSyncResult(null);
     try {
-      const res = await fetch('/api/admin/resources', { method: 'POST' });
+      const res = await fetch('/api/admin/resources', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ admin }),
+      });
       setSyncResult(res.ok ? 'ok' : 'error');
     } catch {
       setSyncResult('error');

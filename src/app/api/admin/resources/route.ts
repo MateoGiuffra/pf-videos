@@ -3,6 +3,7 @@ import { verifyAuth } from '@/lib/auth';
 import { scrapeResources } from '@/lib/resources';
 import { UploadFilesDrive } from '@/lib/upload';
 import { cookies } from 'next/headers';
+import { ENV } from '@/config/env';
 
 /**
  * GET /api/admin/resources
@@ -62,13 +63,21 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    // 1. Verify Authentication
+    // 1. Verify Authentication (JWT)
     const user = await verifyAuth();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // 2. Get Moodle Session
+    // 2. Verify admin name passed by the client matches the server-side ADMIN env var
+    const body = await req.json().catch(() => ({}));
+    const { admin } = body as { admin?: string };
+
+    if (!admin || !ENV.ADMIN || admin !== ENV.ADMIN) {
+      return NextResponse.json({ error: 'Forbidden: admin access only' }, { status: 403 });
+    }
+
+    // 3. Get Moodle Session
     const cookieStore = await cookies();
     const moodleSession = cookieStore.get('moodle_session')?.value;
     console.log(

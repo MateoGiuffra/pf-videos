@@ -81,10 +81,10 @@ export async function login(username: string, password: string) {
           const nameValue = parts[0];
           const [name, value] = nameValue.split('=');
           const trimmedName = name.trim();
-          
+
           if (trimmedName.startsWith('MoodleSession') || trimmedName.startsWith('MOODLEID')) {
-             // 1. Store as original name for proxy reference
-             cookieStore.set(`moodle_c_${trimmedName}`, value, {
+            // 1. Store as original name for proxy reference
+            cookieStore.set(`moodle_c_${trimmedName}`, value, {
               httpOnly: true,
               secure: process.env.NODE_ENV === 'production',
               sameSite: 'lax',
@@ -142,7 +142,7 @@ export async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete('auth_token');
   cookieStore.delete('moodle_session');
-  
+
   // Clear all other moodle cookies
   const allCookies = cookieStore.getAll();
   allCookies.forEach(c => {
@@ -170,11 +170,11 @@ export async function verifyAuth() {
 
 /**
  * Returns true if the current Moodle session belongs to the admin user.
- * Fetches /user/profile.php and compares the h1 against ADMIN_MOODLE_NAME env var.
+ * Fetches /user/profile.php and compares the h1 against the ADMIN env var.
  */
 export async function checkIsAdmin(): Promise<boolean> {
-  const adminName = ENV.ADMIN_MOODLE_NAME;
-  if (!adminName) return false;
+  const admin = ENV.ADMIN;
+  if (!admin) return false;
 
   try {
     const cookieStore = await cookies();
@@ -196,7 +196,7 @@ export async function checkIsAdmin(): Promise<boolean> {
     const $ = cheerio.load(html);
     const h1Text = $('h1').first().text().trim();
 
-    return h1Text === adminName;
+    return h1Text === admin;
   } catch {
     return false;
   }
