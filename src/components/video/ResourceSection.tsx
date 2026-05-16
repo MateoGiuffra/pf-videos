@@ -1,30 +1,54 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, BookOpen, PenTool, File, Download, CornerDownRight, Maximize2 } from 'lucide-react';
+import { ChevronDown, BookOpen, PenTool, File, Download, Eye, Loader2 } from 'lucide-react';
 import { downloadAllAsZip } from '@/lib/zip';
+import { useToast } from '@/components/ui/Toast';
 import { clsx } from 'clsx';
 
 interface ResourceSectionProps {
   unitTitle: string;
-  resources: any[]; // Google Drive resources
-  viewMode: 'grid' | 'list';
+  resources: any[];
   index: number;
   onViewPDF: (url: string, title: string) => void;
 }
 
-export function ResourceSection({ unitTitle, resources, viewMode, index, onViewPDF }: ResourceSectionProps) {
+export function ResourceSection({ unitTitle, resources, index, onViewPDF }: ResourceSectionProps) {
   const [isOpen, setIsOpen] = useState(index === 0);
+  const [downloading, setDownloading] = useState(false);
+  const { loading, update } = useToast();
+
+  function handleDownloadUnit(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (downloading) return;
+    setDownloading(true);
+    const files = resources.map(r => ({
+      name: `${r.title}.pdf`,
+      url: `/api/resources/view?id=${encodeURIComponent(r.driveId)}&filename=${encodeURIComponent(r.title)}&download=true`,
+    }));
+    const toastId = loading(`Preparando ${unitTitle}`, `Empaquetando ${files.length} archivo${files.length === 1 ? '' : 's'}…`);
+    downloadAllAsZip(files, unitTitle, {
+      onProgress: (c, t) => update(toastId, { description: `Descargando ${c} de ${t}…` }),
+      onError: (msg) => {
+        update(toastId, { variant: 'error', title: 'Error en la descarga', description: msg, duration: 5000 });
+        setDownloading(false);
+      },
+      onDone: () => {
+        update(toastId, { variant: 'success', title: 'Descarga lista', description: `${unitTitle} guardada.`, duration: 4000 });
+        setDownloading(false);
+      },
+    });
+  }
 
   return (
-    <section 
-      className="animate-in fade-in slide-in-from-bottom-12 duration-1000 overflow-hidden" 
-      style={{ animationDelay: `${index * 100}ms` }}
+    <section
+      className="animate-in fade-in slide-in-from-bottom-4 duration-700"
+      style={{ animationDelay: `${Math.min(index * 60, 240)}ms` }}
     >
-      {/* Header / Accordion Trigger */}
       <div
         role="button"
         tabIndex={0}
+        aria-expanded={isOpen}
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
@@ -32,116 +56,123 @@ export function ResourceSection({ unitTitle, resources, viewMode, index, onViewP
             setIsOpen(!isOpen);
           }
         }}
-        className="w-full flex items-center justify-between group mb-6 py-4 px-6 bg-white/30 dark:bg-dark-card/30 hover:bg-white/50 dark:hover:bg-dark-card/50 border border-brand-stroke/30 dark:border-dark-stroke/30 rounded-3xl transition-all duration-500 backdrop-blur-sm shadow-sm hover:shadow-md cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-accent/50"
+        className={clsx(
+          'group w-full flex items-center justify-between gap-3 py-3 sm:py-4 px-4 sm:px-5',
+          'bg-brand-bg-2/70 dark:bg-dark-bg-2/60 backdrop-blur-md border border-brand-stroke dark:border-dark-stroke',
+          'rounded-2xl transition-all duration-300 cursor-pointer active:scale-[0.995]',
+          'hover:border-brand-accent/30 dark:hover:border-dark-accent/30 hover:bg-brand-bg-2 dark:hover:bg-dark-bg-2',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent dark:focus-visible:ring-dark-accent',
+          isOpen && 'border-brand-accent/30 dark:border-dark-accent/30',
+        )}
       >
-        <div className="flex flex-col items-start gap-1">
-          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-accent/70 group-hover:text-brand-accent transition-colors">
-            Sección del Curso
-          </span>
-          <div className="flex items-center gap-4 text-left">
-            <h2 className="text-2xl md:text-3xl font-serif font-black text-brand-ink dark:text-dark-ink tracking-tight capitalize">
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+          <div className={clsx(
+            'w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors',
+            isOpen
+              ? 'bg-brand-accent dark:bg-dark-accent text-white'
+              : 'bg-brand-accent-soft dark:bg-dark-accent-soft text-brand-accent dark:text-dark-accent',
+          )}>
+            <File className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+          </div>
+
+          <div className="min-w-0 flex-1 text-left">
+            <p className="font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.22em] text-brand-ink-soft dark:text-dark-ink-soft">
+              Unidad · {resources.length} {resources.length === 1 ? 'archivo' : 'archivos'}
+            </p>
+            <h2 className="font-serif text-lg sm:text-xl lg:text-2xl font-black text-brand-ink dark:text-dark-ink tracking-tight capitalize leading-tight truncate">
               {unitTitle.replace(/_/g, ' ')}
             </h2>
-            <span className="px-3 py-1 bg-brand-accent/10 dark:bg-dark-accent/10 text-brand-accent dark:text-dark-accent rounded-full text-[10px] font-black uppercase tracking-widest border border-brand-accent/20">
-              {resources.length} {resources.length === 1 ? 'Archivo' : 'Archivos'}
-            </span>
           </div>
         </div>
-        
-        <div className="flex items-center gap-4">
-           <button
-             onClick={(e) => {
-               e.stopPropagation();
-               const files = resources.map(r => ({ name: `${r.title}.pdf`, url: `/api/resources/view?id=${encodeURIComponent(r.driveId)}&filename=${encodeURIComponent(r.title)}&download=true` }));
-               downloadAllAsZip(files, unitTitle);
-             }}
-             className="px-3 py-1.5 bg-brand-bg-1 dark:bg-dark-bg-2 border border-brand-stroke dark:border-dark-stroke rounded-xl text-[10px] font-black uppercase tracking-widest text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent transition-all hidden sm:flex items-center gap-2"
-             title="Descargar unidad completa"
-           >
-             <Download className="w-3 h-3" />
-             ZIP
-           </button>
-           
-           <div className={clsx(
-             "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 border border-brand-stroke/40 dark:border-dark-stroke/40",
-             isOpen ? "bg-brand-accent text-white rotate-180 shadow-lg shadow-teal-500/20" : "bg-white dark:bg-dark-bg-2 text-brand-ink-soft dark:text-dark-ink-soft"
-           )}>
-             <ChevronDown className="w-6 h-6" />
-           </div>
+
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <button
+            onClick={handleDownloadUnit}
+            disabled={downloading}
+            aria-label="Descargar unidad como ZIP"
+            title="Descargar unidad como ZIP"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 bg-transparent border border-brand-stroke dark:border-dark-stroke rounded-lg font-mono text-[10px] font-semibold uppercase tracking-wider text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent dark:hover:text-dark-accent hover:border-brand-accent/40 dark:hover:border-dark-accent/40 active:scale-95 transition-[transform,color,border-color] disabled:opacity-60 disabled:cursor-wait"
+          >
+            {downloading ? <Loader2 className="w-3 h-3 animate-spin" aria-hidden="true" /> : <Download className="w-3 h-3" aria-hidden="true" />}
+            {downloading ? 'Preparando' : 'ZIP'}
+          </button>
+
+          <div className={clsx(
+            'w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all duration-300 border',
+            isOpen
+              ? 'bg-brand-accent dark:bg-dark-accent text-white border-transparent rotate-180'
+              : 'bg-transparent text-brand-ink-soft dark:text-dark-ink-soft border-brand-stroke dark:border-dark-stroke',
+          )}>
+            <ChevronDown className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+          </div>
         </div>
       </div>
 
-      {/* Content Area */}
       <div className={clsx(
-        "transition-all duration-700 ease-in-out origin-top",
-        isOpen ? "max-h-[5000px] opacity-100 mb-16 scale-100" : "max-h-0 opacity-0 overflow-hidden scale-95"
+        'grid transition-[grid-template-rows,opacity,margin] duration-500 ease-out',
+        isOpen ? 'grid-rows-[1fr] opacity-100 mt-3 sm:mt-4 mb-8' : 'grid-rows-[0fr] opacity-0',
       )}>
-        <div className={clsx(
-          viewMode === 'grid' 
-            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-1" 
-            : "flex flex-col gap-4 max-w-5xl mx-auto"
-        )}>
-          {resources.map((resource) => (
-            <div
-              key={resource.id}
-              className={clsx(
-                "group relative transition-all duration-500",
-                "bg-white/40 dark:bg-dark-card/40 backdrop-blur-sm border border-brand-stroke/40 dark:border-dark-stroke/40 rounded-[2rem] p-8 hover:bg-white dark:hover:bg-dark-card hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:-translate-y-2"
-              )}
-            >
-              <div className="flex items-center gap-6">
-                <div className={clsx(
-                  "w-16 h-16 rounded-[1.25rem] flex items-center justify-center transition-all duration-700 shadow-lg",
-                  resource.type === 'practice' 
-                    ? "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600 group-hover:text-white group-hover:rotate-[15deg] group-hover:scale-110" 
-                    : resource.type === 'theory'
-                    ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 group-hover:bg-purple-600 group-hover:text-white group-hover:rotate-[15deg] group-hover:scale-110"
-                    : "bg-teal-500/10 text-teal-600 dark:text-teal-400 group-hover:bg-teal-600 group-hover:text-white group-hover:rotate-[15deg] group-hover:scale-110"
-                )}>
-                  {resource.type === 'practice' ? <PenTool className="w-8 h-8" /> : 
-                   resource.type === 'theory' ? <BookOpen className="w-8 h-8" /> : 
-                   <File className="w-8 h-8" />}
-                </div>
-                
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-brand-ink dark:text-dark-ink group-hover:text-brand-accent transition-colors leading-snug line-clamp-2 pr-4">
-                    {resource.title}
-                  </h3>
-                  
-                  <div className="mt-4 flex items-center justify-between">
-                    <span className={clsx(
-                      "text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border",
-                      resource.type === 'practice' 
-                        ? "border-blue-500/20 text-blue-600 dark:text-blue-400 bg-blue-500/5" 
-                        : resource.type === 'theory'
-                        ? "border-purple-500/20 text-purple-600 dark:text-purple-400 bg-purple-500/5"
-                        : "border-teal-500/20 text-teal-600 dark:text-teal-400 bg-teal-500/5"
-                    )}>
-                      {resource.type === 'practice' ? 'Práctica' : resource.type === 'theory' ? 'Teoría' : 'Recurso'}
-                    </span>
-                    
-                    <div className="flex items-center gap-2">
-                       <button 
-                         onClick={() => onViewPDF(`/api/resources/view?id=${encodeURIComponent(resource.driveId)}&filename=${encodeURIComponent(resource.title)}`, resource.title)}
-                         className="flex items-center gap-2 px-3 py-1.5 bg-brand-accent text-white rounded-lg text-[10px] font-black uppercase tracking-tighter hover:scale-105 active:scale-95 transition-all shadow-md shadow-teal-500/20"
-                       >
-                         Ver <Maximize2 className="w-3 h-3" />
-                       </button>
-                       <a 
-                         href={`/api/resources/view?id=${encodeURIComponent(resource.driveId)}&filename=${encodeURIComponent(resource.title)}&download=true`}
-                         className="p-1.5 text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent transition-colors"
-                         title="Descargar PDF"
-                       >
-                         <Download className="w-4 h-4" />
-                       </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 p-0.5">
+            {resources.map((resource) => (
+              <ResourceCard
+                key={resource.id}
+                resource={resource}
+                onView={() => onViewPDF(
+                  `/api/resources/view?id=${encodeURIComponent(resource.driveId)}&filename=${encodeURIComponent(resource.title)}`,
+                  resource.title,
+                )}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function ResourceCard({ resource, onView }: { resource: any; onView: () => void }) {
+  const isPractice = resource.type === 'practice';
+  const isTheory = resource.type === 'theory';
+
+  const Icon = isPractice ? PenTool : isTheory ? BookOpen : File;
+  const label = isPractice ? 'Práctica' : isTheory ? 'Teoría' : 'Recurso';
+
+  const downloadUrl = `/api/resources/view?id=${encodeURIComponent(resource.driveId)}&filename=${encodeURIComponent(resource.title)}&download=true`;
+
+  return (
+    <article className="group relative bg-brand-bg-2/80 dark:bg-dark-bg-2/60 backdrop-blur-sm border border-brand-stroke dark:border-dark-stroke rounded-2xl p-4 sm:p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-accent/30 dark:hover:border-dark-accent/30 hover:shadow-[0_18px_40px_-15px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_18px_40px_-15px_rgba(0,0,0,0.6)]">
+      <div className="flex items-start gap-3">
+        <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-brand-accent-soft dark:bg-dark-accent-soft text-brand-accent dark:text-dark-accent flex items-center justify-center shrink-0 transition-colors group-hover:bg-brand-accent group-hover:dark:bg-dark-accent group-hover:text-white">
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-brand-ink-soft dark:text-dark-ink-soft mb-1">
+            {label}
+          </p>
+          <h3 className="text-sm font-semibold text-brand-ink dark:text-dark-ink leading-snug line-clamp-2 group-hover:text-brand-accent dark:group-hover:text-dark-accent transition-colors">
+            {resource.title}
+          </h3>
+        </div>
+      </div>
+
+      <div className="mt-3.5 flex items-center gap-1.5">
+        <button
+          onClick={onView}
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-brand-accent dark:bg-dark-accent text-white rounded-lg text-xs font-semibold shadow-sm shadow-brand-accent/20 dark:shadow-dark-accent/20 active:scale-95 transition-all"
+        >
+          <Eye className="w-3.5 h-3.5" />
+          <span>Ver</span>
+        </button>
+        <a
+          href={downloadUrl}
+          aria-label="Descargar PDF"
+          className="p-2 rounded-lg border border-brand-stroke dark:border-dark-stroke text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent dark:hover:text-dark-accent hover:border-brand-accent/40 dark:hover:border-dark-accent/40 active:scale-95 transition-all"
+        >
+          <Download className="w-3.5 h-3.5" />
+        </a>
+      </div>
+    </article>
   );
 }

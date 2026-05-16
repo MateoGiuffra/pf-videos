@@ -1,21 +1,39 @@
-import type { Metadata } from "next";
-import { Space_Grotesk, Fraunces } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Fraunces, Geist, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/app/providers";
 
-const spaceGrotesk = Space_Grotesk({
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  variable: "--font-geist",
+  display: "swap",
 });
 
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
+  display: "swap",
+});
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Videos PF - Repositorio de clases",
-  description: "Buscador de videos de programación funcional.",
+  title: "Videos PF — Repositorio de Clases",
+  description: "Buscador de videos y material de Programación Funcional.",
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf8f3" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -42,15 +60,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body 
-        className={`${spaceGrotesk.variable} ${fraunces.variable} font-sans antialiased`}
+      <body
+        className={`${geist.variable} ${fraunces.variable} ${jetbrains.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
-        <Providers>
-          <div className="bg-shape shape-a"></div>
-          <div className="bg-shape shape-b"></div>
-          {children}
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

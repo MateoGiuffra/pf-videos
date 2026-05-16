@@ -1,88 +1,102 @@
 'use client';
 
 import { Header } from '@/components/layout/Header';
-import { ArrowLeft, Book, Code, MessageCircle, Earth } from 'lucide-react';
+import { ArrowLeft, Book, Code, MessageCircle, Earth, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
 export default function InfoPage() {
   return (
-    <main className="min-h-screen pb-20 overflow-x-hidden">
+    <main className="min-h-dvh overflow-x-hidden">
       <Header />
-      
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 mt-12 animate-in fade-in slide-in-from-bottom-5 duration-700">
-        <div className="bg-brand-card dark:bg-dark-card border border-brand-stroke dark:border-dark-stroke rounded-3xl p-8 md:p-12 backdrop-blur-md shadow-2xl relative overflow-hidden">
-          {/* Background Decorative Elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl -mr-32 -mt-32" />
-          
-          <Link 
-            href="/" 
-            className="inline-flex items-center gap-2 text-sm font-bold text-brand-accent hover:translate-x-1 transition-transform mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Volver al buscador
-          </Link>
 
-          <header className="mb-10">
-            <h1 className="font-serif text-4xl md:text-5xl text-brand-ink dark:text-dark-ink mb-4">Sobre Videos PF</h1>
-            <p className="text-brand-ink-soft dark:text-dark-ink-soft text-lg leading-relaxed">
-              Este repositorio fue creado para facilitar el acceso a las clases grabadas de Programación Funcional, 
-              organizando el contenido de manera intuitiva y accesible.
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent dark:hover:text-dark-accent group transition-colors mb-6"
+        >
+          <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+          Volver al buscador
+        </Link>
+
+        <header className="mb-10 sm:mb-12">
+          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-brand-accent dark:text-dark-accent mb-3">
+            Sobre el proyecto
+          </p>
+          <h1 className="font-serif text-3xl sm:text-5xl font-black text-brand-ink dark:text-dark-ink tracking-tight leading-[1.05]">
+            Una manera ordenada de revisar las clases.
+          </h1>
+          <p className="mt-5 text-base sm:text-lg text-brand-ink-soft dark:text-dark-ink-soft leading-relaxed max-w-2xl">
+            Videos PF centraliza las clases grabadas y el material de Programación Funcional en un solo lugar,
+            con búsqueda por título, fecha, año y cuatrimestre.
+          </p>
+        </header>
+
+        <div className="space-y-10">
+          <Section icon={Book} title="Propósito">
+            <p>
+              Una herramienta complementaria que reúne los enlaces de YouTube y los PDFs que suelen
+              circular por Discord y Aulas CPI. Los datos provienen de la cátedra y la comunidad,
+              normalizados para una experiencia de búsqueda unificada.
             </p>
-          </header>
+          </Section>
 
-          <div className="space-y-10">
-            <section className="space-y-4">
-              <h2 className="text-xl font-bold flex items-center gap-2 text-brand-ink dark:text-dark-ink">
-                <Book className="w-5 h-5 text-brand-accent" />
-                Propósito del proyecto
-              </h2>
-              <div className="text-brand-ink-soft dark:text-dark-ink-soft space-y-4 leading-relaxed">
-                <p>
-                  Videos PF es una herramienta complementaria que permite buscar clases por título, fecha, año y cuatrimestre. 
-                  Busca centralizar los links de YouTube que suelen compartirse en Discord y Aulas CPI.
-                </p>
-                <p>
-                  El proyecto utiliza los datos proporcionados por la cátedra y la comunidad, normalizándolos para ofrecer
-                  una experiencia de búsqueda unificada.
-                </p>
-              </div>
-            </section>
+          <Section icon={Earth} title="Cómo funciona el acceso">
+            <p>
+              El acceso está restringido a alumnos. Tus credenciales de <strong className="text-brand-ink dark:text-dark-ink">Aulas CPI</strong>{' '}
+              se validan en tiempo real contra la plataforma oficial mediante un puente seguro.
+            </p>
+            <p className="flex gap-3 mt-4 p-3.5 rounded-xl bg-brand-accent-soft dark:bg-dark-accent-soft border border-brand-accent/15 dark:border-dark-accent/15 text-sm">
+              <ShieldCheck className="w-4 h-4 text-brand-accent dark:text-dark-accent shrink-0 mt-0.5" />
+              <span className="text-brand-ink-soft dark:text-dark-ink-soft leading-relaxed">
+                Tus credenciales nunca se almacenan en nuestros servidores; solo se usan
+                para validar la sesión actual.
+              </span>
+            </p>
+          </Section>
 
-            <section className="space-y-4">
-              <h2 className="text-xl font-bold flex items-center gap-2 text-brand-ink dark:text-dark-ink">
-                <Earth className="w-5 h-5 text-brand-accent" />
-                Cómo funciona
-              </h2>
-              <div className="text-brand-ink-soft dark:text-dark-ink-soft space-y-4 leading-relaxed">
-                <p>
-                  El acceso está restringido a alumnos de la materia. Por eso, solicitamos iniciar sesión con tus credenciales
-                  de <strong>Aulas CPI</strong>. Este proceso se realiza mediante un puente (proxy) que verifica tus datos
-                  directamente con la plataforma oficial.
-                </p>
-                <p className="bg-yellow-500/10 dark:bg-yellow-500/5 border-l-4 border-yellow-500 p-4 rounded text-sm italic">
-                  Tus credenciales nunca son almacenadas en nuestros servidores. Solo se utilizan para validar la sesión actual.
-                </p>
-              </div>
-            </section>
+          <div className="h-px bg-brand-stroke dark:bg-dark-stroke" />
 
-            <hr className="border-brand-stroke dark:border-dark-stroke" />
-
-            <footer className="pt-4 flex flex-col md:flex-row justify-between items-center gap-6">
-              <div className="flex gap-4">
-                <a href="#" className="p-3 bg-brand-bg-2 dark:bg-dark-bg-2 rounded-xl text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent hover:scale-110 transition-all border border-brand-stroke dark:border-dark-stroke shadow-sm">
-                  <Code className="w-5 h-5" />
-                </a>
-                <a href="#" className="p-3 bg-brand-bg-2 dark:bg-dark-bg-2 rounded-xl text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent hover:scale-110 transition-all border border-brand-stroke dark:border-dark-stroke shadow-sm">
-                  <MessageCircle className="w-5 h-5" />
-                </a>
-              </div>
-              <p className="text-xs text-brand-ink-soft dark:text-dark-ink-soft font-medium uppercase tracking-widest">
-                Creado para la comunidad de PF &copy; 2024
-              </p>
-            </footer>
-          </div>
+          <footer className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5">
+            <div className="flex gap-2">
+              <a
+                href="#"
+                aria-label="Repositorio"
+                className="p-2.5 rounded-xl bg-brand-bg-2 dark:bg-dark-bg-2 border border-brand-stroke dark:border-dark-stroke text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent dark:hover:text-dark-accent hover:border-brand-accent/40 dark:hover:border-dark-accent/40 active:scale-95 transition-all"
+              >
+                <Code className="w-4 h-4" />
+              </a>
+              <a
+                href="#"
+                aria-label="Contacto"
+                className="p-2.5 rounded-xl bg-brand-bg-2 dark:bg-dark-bg-2 border border-brand-stroke dark:border-dark-stroke text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent dark:hover:text-dark-accent hover:border-brand-accent/40 dark:hover:border-dark-accent/40 active:scale-95 transition-all"
+              >
+                <MessageCircle className="w-4 h-4" />
+              </a>
+            </div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-brand-ink-soft dark:text-dark-ink-soft">
+              Hecho con cariño para la comunidad PF
+            </p>
+          </footer>
         </div>
       </div>
     </main>
+  );
+}
+
+function Section({ icon: Icon, title, children }: { icon: React.ElementType; title: string; children: React.ReactNode }) {
+  return (
+    <section>
+      <div className="flex items-center gap-2.5 mb-3">
+        <div className="w-8 h-8 rounded-lg bg-brand-accent-soft dark:bg-dark-accent-soft flex items-center justify-center">
+          <Icon className="w-4 h-4 text-brand-accent dark:text-dark-accent" />
+        </div>
+        <h2 className="font-serif text-xl sm:text-2xl font-black text-brand-ink dark:text-dark-ink tracking-tight">
+          {title}
+        </h2>
+      </div>
+      <div className="text-brand-ink-soft dark:text-dark-ink-soft leading-relaxed space-y-3 max-w-2xl">
+        {children}
+      </div>
+    </section>
   );
 }

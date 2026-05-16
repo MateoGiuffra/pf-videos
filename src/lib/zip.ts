@@ -1,16 +1,30 @@
 import JSZip from 'jszip';
 
+interface ZipProgress {
+  onStart?: (totalFiles: number) => void;
+  onProgress?: (completed: number, total: number) => void;
+  onError?: (message: string) => void;
+  onDone?: () => void;
+}
+
 /**
  * Downloads a flat list of files as a single ZIP.
- * All files land in the root of the ZIP (legacy use).
  */
-export async function downloadAllAsZip(files: { name: string, url: string }[], zipName: string) {
+export async function downloadAllAsZip(
+  files: { name: string; url: string }[],
+  zipName: string,
+  hooks?: ZipProgress,
+) {
   const zip = new JSZip();
   const root = zip.folder(zipName);
-  if (!root) throw new Error('Could not create root folder in ZIP');
+  if (!root) {
+    hooks?.onError?.('No se pudo crear el ZIP');
+    return;
+  }
 
-  console.log(`[ZIP] Descargando ${files.length} archivos (plano)...`);
+  hooks?.onStart?.(files.length);
 
+  let completed = 0;
   await Promise.all(
     files.map(async (file) => {
       try {
@@ -19,29 +33,40 @@ export async function downloadAllAsZip(files: { name: string, url: string }[], z
         root.file(file.name, blob);
       } catch (error) {
         console.error(`[ZIP] Error al descargar ${file.name}:`, error);
+      } finally {
+        completed++;
+        hooks?.onProgress?.(completed, files.length);
       }
-    })
+    }),
   );
 
-  await triggerZipDownload(zip, zipName);
+  try {
+    await triggerZipDownload(zip, zipName);
+    hooks?.onDone?.();
+  } catch (e) {
+    hooks?.onError?.('No se pudo generar el archivo ZIP');
+  }
 }
 
 /**
- * Downloads files grouped by unit folder — mirrors the Drive folder structure.
- * Each unit becomes a subfolder inside the ZIP.
+ * Downloads files grouped by unit folder.
  */
 export async function downloadAllAsZipWithFolders(
   units: Record<string, { name: string; url: string }[]>,
-  zipName: string
+  zipName: string,
+  hooks?: ZipProgress,
 ) {
   const zip = new JSZip();
   const root = zip.folder(zipName);
-  if (!root) throw new Error('Could not create root folder in ZIP');
+  if (!root) {
+    hooks?.onError?.('No se pudo crear el ZIP');
+    return;
+  }
 
   const totalFiles = Object.values(units).flat().length;
-  console.log(`[ZIP] Descargando ${totalFiles} archivos en ${Object.keys(units).length} carpetas...`);
+  hooks?.onStart?.(totalFiles);
 
-  // Process all folders in parallel, files within each folder also in parallel
+  let completed = 0;
   await Promise.all(
     Object.entries(units).map(async ([unitName, files]) => {
       const unitFolder = root.folder(unitName);
@@ -55,13 +80,21 @@ export async function downloadAllAsZipWithFolders(
             unitFolder.file(file.name, blob);
           } catch (error) {
             console.error(`[ZIP] Error al descargar ${unitName}/${file.name}:`, error);
+          } finally {
+            completed++;
+            hooks?.onProgress?.(completed, totalFiles);
           }
-        })
+        }),
       );
-    })
+    }),
   );
 
-  await triggerZipDownload(zip, zipName);
+  try {
+    await triggerZipDownload(zip, zipName);
+    hooks?.onDone?.();
+  } catch (e) {
+    hooks?.onError?.('No se pudo generar el archivo ZIP');
+  }
 }
 
 function triggerZipDownload(zip: JSZip, zipName: string) {

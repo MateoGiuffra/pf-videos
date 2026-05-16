@@ -6,8 +6,9 @@ import { VideoItem } from '@/components/video/VideoItem';
 import { VideoPlayer } from '@/components/video/VideoPlayer';
 import { PracticeVideo, TheoryVideo } from '@/lib/data';
 import { downloadAllAsZipWithFolders } from '@/lib/zip';
+import { useToast } from '@/components/ui/Toast';
 import { clsx } from 'clsx';
-import { BookOpen, Download, FileText, Loader2, PenTool, Search } from 'lucide-react';
+import { BookOpen, Download, FileText, Loader2, PenTool, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 interface VideoListProps {
@@ -15,33 +16,45 @@ interface VideoListProps {
   theoryVideos: TheoryVideo[];
 }
 
+type Tab = 'practice' | 'theory' | 'material';
+
+const TABS: { id: Tab; label: string; short: string; icon: React.ElementType }[] = [
+  { id: 'practice', label: 'Clases Prácticas', short: 'Prácticas', icon: PenTool },
+  { id: 'theory', label: 'Clases Teóricas', short: 'Teóricas', icon: BookOpen },
+  { id: 'material', label: 'Material', short: 'Material', icon: FileText },
+];
+
 export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
-  const [activeTab, setActiveTab] = useState<'practice' | 'theory' | 'material'>('practice');
+  const [activeTab, setActiveTab] = useState<Tab>('practice');
   const [search, setSearch] = useState('');
   const [selectedYear, setSelectedYear] = useState<string>('all');
   const [selectedCuatri, setSelectedCuatri] = useState<string>('all');
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
-  // Materials state
   const [materials, setMaterials] = useState<Record<string, any[]>>({});
   const [loadingMaterials, setLoadingMaterials] = useState(false);
+  const [downloadingAll, setDownloadingAll] = useState(false);
   const [viewingPDF, setViewingPDF] = useState<{ url: string; title: string } | null>(null);
 
-  // Fetch materials when switching to material tab
+  const { loading, update, error: toastError } = useToast();
+
   useEffect(() => {
     if (activeTab === 'material' && Object.keys(materials).length === 0) {
       setLoadingMaterials(true);
       fetch('/api/admin/resources')
         .then(res => res.json())
         .then(data => {
-          if (!data.error) setMaterials(data);
+          if (data.error) {
+            toastError('No pudimos cargar el material', data.error);
+          } else {
+            setMaterials(data);
+          }
         })
-        .catch(err => console.error('Error fetching materials:', err))
+        .catch(() => toastError('Error al cargar material', 'Revisá tu conexión.'))
         .finally(() => setLoadingMaterials(false));
     }
-  }, [activeTab, materials]);
+  }, [activeTab, materials, toastError]);
 
-  // Sort units numerically ("Unidad 1" < "Unidad 2" < ... < "Unidad 10")
   const sortedUnitKeys = useMemo(() => {
     return Object.keys(materials).sort((a, b) => {
       const numA = parseInt(a.match(/\d+/)?.[0] ?? '0', 10);
@@ -66,141 +79,143 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
         return matchesSearch && matchesYear && matchesCuatri;
       });
     } else if (activeTab === 'theory') {
-      return theoryVideos.filter(v => {
-        return v.title.toLowerCase().includes(search.toLowerCase());
-      });
+      return theoryVideos.filter(v => v.title.toLowerCase().includes(search.toLowerCase()));
     }
     return [];
   }, [activeTab, search, selectedYear, selectedCuatri, practiceVideos, theoryVideos]);
 
   const selectedVideo = selectedIndex >= 0 ? filteredVideos[selectedIndex] : null;
 
-  const handleNext = () => {
-    if (selectedIndex < filteredVideos.length - 1) {
-      setSelectedIndex((prev: number) => prev + 1);
-    }
-  };
+  function handleDownloadAll() {
+    if (!sortedUnitKeys.length || downloadingAll) return;
+    setDownloadingAll(true);
 
-  const handlePrev = () => {
-    if (selectedIndex > 0) {
-      setSelectedIndex((prev: number) => prev - 1);
+    const unitMap: Record<string, { name: string; url: string }[]> = {};
+    for (const unitTitle of sortedUnitKeys) {
+      unitMap[unitTitle] = (materials[unitTitle] || []).map(f => ({
+        name: f.title.endsWith('.pdf') ? f.title : `${f.title}.pdf`,
+        url: `/api/resources/view?id=${encodeURIComponent(f.driveId)}&filename=${encodeURIComponent(f.title)}&download=true`,
+      }));
     }
-  };
+
+    const total = Object.values(unitMap).flat().length;
+    const toastId = loading('Preparando descarga', `Empaquetando ${total} archivo${total === 1 ? '' : 's'}…`);
+
+    downloadAllAsZipWithFolders(unitMap, 'material-completo', {
+      onProgress: (completed, t) => {
+        update(toastId, { description: `Descargando ${completed} de ${t}…` });
+      },
+      onError: (msg) => {
+        update(toastId, { variant: 'error', title: 'Error en la descarga', description: msg, duration: 5000 });
+        setDownloadingAll(false);
+      },
+      onDone: () => {
+        update(toastId, { variant: 'success', title: 'Descarga lista', description: 'El ZIP se guardó en tu equipo.', duration: 4000 });
+        setDownloadingAll(false);
+      },
+    });
+  }
 
   return (
-    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-      {/* Search & Filters Bar */}
-      <div className="bg-white/80 dark:bg-dark-card/90 border border-brand-stroke dark:border-dark-stroke rounded-[2.5rem] p-6 lg:p-8 backdrop-blur-xl shadow-2xl flex flex-col md:flex-row gap-8 items-center ring-1 ring-black/5 dark:ring-white/5 mx-auto max-w-6xl">
-        <div className="relative flex-1 group w-full">
-          <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-            <Search className="w-5 h-5 text-brand-ink-soft/40 dark:text-dark-ink-soft/40 group-focus-within:text-brand-accent transition-all duration-300" />
-          </div>
+    <div className="space-y-7 sm:space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      {/* Search + Filters */}
+      <div className="bg-brand-bg-2/80 dark:bg-dark-bg-2/70 border border-brand-stroke dark:border-dark-stroke rounded-2xl sm:rounded-3xl p-3 sm:p-4 lg:p-5 backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] flex flex-col md:flex-row gap-3 items-stretch md:items-center">
+        <div className="relative flex-1 group">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-ink-faint dark:text-dark-ink-faint group-focus-within:text-brand-accent dark:group-focus-within:text-dark-accent transition-colors" />
           <input
             type="text"
             placeholder={
-              activeTab === 'practice' ? "Buscar por título, fecha (YYYY-MM-DD)..." :
-                activeTab === 'theory' ? "Buscar por título..." :
-                  "¿Qué material estás buscando hoy?"
+              activeTab === 'practice' ? 'Buscar por título o fecha…' :
+              activeTab === 'theory' ? 'Buscar por título…' :
+              '¿Qué material estás buscando?'
             }
-            className="w-full pl-16 pr-8 py-5 bg-brand-bg-2/50 dark:bg-dark-bg-2/50 border border-transparent focus:bg-white dark:focus:bg-dark-card rounded-3xl text-sm md:text-base text-brand-ink dark:text-dark-ink placeholder:text-brand-ink-soft/30 dark:placeholder:text-dark-ink-soft/50 focus:outline-none focus:ring-4 focus:ring-brand-accent/10 focus:border-brand-accent/50 transition-all duration-500 shadow-inner"
+            className="w-full pl-10 pr-9 py-2.5 sm:py-3 bg-brand-bg-1/50 dark:bg-dark-bg-1/50 border border-brand-stroke dark:border-dark-stroke focus:bg-brand-bg-2 dark:focus:bg-dark-bg-2 rounded-xl text-sm sm:text-[15px] text-brand-ink dark:text-dark-ink placeholder:text-brand-ink-faint dark:placeholder:text-dark-ink-faint focus:outline-none focus:border-brand-accent dark:focus:border-dark-accent focus:ring-4 focus:ring-brand-accent-ring dark:focus:ring-dark-accent-ring transition-all"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              aria-label="Limpiar búsqueda"
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-brand-ink-faint dark:text-dark-ink-faint hover:text-brand-ink dark:hover:text-dark-ink hover:bg-brand-stroke/50 dark:hover:bg-dark-stroke/50 active:scale-90 transition-all"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
         {activeTab === 'practice' && (
-          <div className="flex gap-4 w-full md:w-auto">
-            <select
-              className="flex-1 md:flex-none py-4 px-6 bg-brand-bg-2 dark:bg-dark-bg-2 border border-brand-stroke dark:border-dark-stroke rounded-2xl text-sm font-bold text-brand-ink dark:text-dark-ink outline-none cursor-pointer focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition-all appearance-none min-w-[140px] shadow-sm"
+          <div className="flex gap-2">
+            <FilterSelect
+              ariaLabel="Filtrar por año"
               value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-            >
-              <option value="all">Años</option>
-              {years.map(y => <option key={y} value={y.toString()}>{y}</option>)}
-            </select>
-
-            <select
-              className="flex-1 md:flex-none py-4 px-6 bg-brand-bg-2 dark:bg-dark-bg-2 border border-brand-stroke dark:border-dark-stroke rounded-2xl text-sm font-bold text-brand-ink dark:text-dark-ink outline-none cursor-pointer focus:ring-2 focus:ring-brand-accent/20 focus:border-brand-accent transition-all appearance-none min-w-[140px] shadow-sm"
+              onChange={setSelectedYear}
+              options={[{ value: 'all', label: 'Todos los años' }, ...years.map(y => ({ value: y.toString(), label: y.toString() }))]}
+            />
+            <FilterSelect
+              ariaLabel="Filtrar por cuatrimestre"
               value={selectedCuatri}
-              onChange={(e) => setSelectedCuatri(e.target.value)}
-            >
-              <option value="all">Cuatris</option>
-              <option value="1">1° Cuatri</option>
-              <option value="2">2° Cuatri</option>
-            </select>
+              onChange={setSelectedCuatri}
+              options={[
+                { value: 'all', label: 'Ambos cuatris' },
+                { value: '1', label: '1° Cuatri' },
+                { value: '2', label: '2° Cuatri' },
+              ]}
+            />
           </div>
         )}
       </div>
 
-      {/* Modern Centered Tabs */}
-      <div className="flex justify-center mt-8">
-        <div className="flex p-1.5 bg-brand-bg-2/30 dark:bg-dark-bg-2/30 rounded-[2.5rem] border border-brand-stroke dark:border-dark-stroke backdrop-blur-md shadow-inner">
-          <button
-            onClick={() => setActiveTab('practice')}
-            className={clsx(
-              "flex items-center gap-2.5 px-8 md:px-10 py-4 rounded-[2rem] text-sm font-black transition-all duration-500",
-              activeTab === 'practice'
-                ? "bg-brand-accent text-white shadow-xl shadow-teal-500/30 scale-105"
-                : "text-brand-ink-soft dark:text-dark-ink-soft hover:bg-white/50 dark:hover:bg-dark-card/50"
-            )}
-          >
-            <PenTool className="w-4 h-4" />
-            Clases Prácticas
-          </button>
-          <button
-            onClick={() => setActiveTab('theory')}
-            className={clsx(
-              "flex items-center gap-2.5 px-8 md:px-10 py-4 rounded-[2rem] text-sm font-black transition-all duration-500",
-              activeTab === 'theory'
-                ? "bg-brand-accent text-white shadow-xl shadow-teal-500/30 scale-105"
-                : "text-brand-ink-soft dark:text-dark-ink-soft hover:bg-white/50 dark:hover:bg-dark-card/50"
-            )}
-          >
-            <BookOpen className="w-4 h-4" />
-            Clases Teóricas
-          </button>
-          <button
-            onClick={() => setActiveTab('material')}
-            className={clsx(
-              "flex items-center gap-2.5 px-8 md:px-10 py-4 rounded-[2rem] text-sm font-black transition-all duration-500",
-              activeTab === 'material'
-                ? "bg-brand-accent text-white shadow-xl shadow-teal-500/30 scale-105"
-                : "text-brand-ink-soft dark:text-dark-ink-soft hover:bg-white/50 dark:hover:bg-dark-card/50"
-            )}
-          >
-            <FileText className="w-4 h-4" />
-            Material
-          </button>
+      {/* Tabs — horizontal scroll on mobile, centered pills on md+ */}
+      <div className="-mx-4 sm:mx-0 overflow-x-auto no-scrollbar">
+        <div className="flex justify-start sm:justify-center px-4 sm:px-0">
+          <div className="inline-flex p-1 bg-brand-bg-2/70 dark:bg-dark-bg-2/70 rounded-2xl border border-brand-stroke dark:border-dark-stroke backdrop-blur-md shadow-sm">
+            {TABS.map((tab) => {
+              const active = activeTab === tab.id;
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={clsx(
+                    'flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 whitespace-nowrap active:scale-[0.97]',
+                    active
+                      ? 'bg-brand-accent dark:bg-dark-accent text-white shadow-md shadow-brand-accent/25 dark:shadow-dark-accent/25'
+                      : 'text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-ink dark:hover:text-dark-ink',
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="sm:hidden">{tab.short}</span>
+                  <span className="hidden sm:inline">{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Material Global Actions */}
+      {/* Material download-all action */}
       {activeTab === 'material' && !loadingMaterials && Object.keys(materials).length > 0 && (
-        <div className="flex justify-end max-w-6xl mx-auto -mb-4">
+        <div className="flex justify-end">
           <button
-            onClick={() => {
-              // Build a folder-per-unit map for the ZIP (all units, all files)
-              const unitMap: Record<string, { name: string; url: string }[]> = {};
-              for (const unitTitle of sortedUnitKeys) {
-                unitMap[unitTitle] = (materials[unitTitle] || []).map(f => ({
-                  name: f.title.endsWith('.pdf') ? f.title : `${f.title}.pdf`,
-                  url: `/api/resources/view?id=${encodeURIComponent(f.driveId)}&filename=${encodeURIComponent(f.title)}&download=true`,
-                }));
-              }
-              downloadAllAsZipWithFolders(unitMap, 'material-completo');
-            }}
-            className="flex items-center gap-2 px-5 py-2.5 bg-brand-bg-1 dark:bg-dark-bg-1 border border-brand-stroke dark:border-dark-stroke rounded-xl text-xs font-black text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent transition-all shadow-sm hover:shadow-md group mb-10"
+            onClick={handleDownloadAll}
+            disabled={downloadingAll}
+            className="group flex items-center gap-2 px-4 py-2 bg-brand-bg-2 dark:bg-dark-bg-2 border border-brand-stroke dark:border-dark-stroke rounded-xl text-xs font-semibold text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-accent dark:hover:text-dark-accent hover:border-brand-accent/40 dark:hover:border-dark-accent/40 active:scale-95 transition-[transform,color,border-color] disabled:opacity-70 disabled:cursor-wait"
           >
-            <Download className="w-4 h-4 group-hover:animate-bounce" />
-            Descargar Todo (ZIP)
+            {downloadingAll ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />
+            ) : (
+              <Download className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform" aria-hidden="true" />
+            )}
+            <span>{downloadingAll ? 'Preparando…' : 'Descargar todo (ZIP)'}</span>
           </button>
         </div>
       )}
 
-      {/* Grid for Videos or Resources */}
-      <div className="pb-12">
+      {/* Content */}
+      <div className="pb-8">
         {activeTab !== 'material' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredVideos.map((v, index) => (
               <VideoItem
                 key={v.id}
@@ -208,26 +223,18 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
                 onClick={() => setSelectedIndex(index)}
               />
             ))}
-            {filteredVideos.length === 0 && (
-              <div className="col-span-full text-center py-32 opacity-50 bg-brand-bg-2/20 dark:bg-dark-bg-2/20 rounded-[3rem] border-2 border-dashed border-brand-stroke/30 dark:border-dark-stroke/30">
-                <Search className="w-16 h-16 mx-auto mb-6 text-brand-ink-soft/20 dark:text-dark-ink-soft/20" />
-                <p className="text-2xl font-serif font-bold text-brand-ink/40 dark:text-dark-ink/50">No se encontraron clases.</p>
-              </div>
-            )}
+            {filteredVideos.length === 0 && <EmptyState icon={Search} message="No encontramos clases con esos filtros." />}
           </div>
         ) : (
-          <div className="space-y-6 mx-auto max-w-6xl">
+          <div className="space-y-5">
             {loadingMaterials ? (
-              <div className="flex flex-col items-center justify-center py-32 animate-pulse">
-                <Loader2 className="w-12 h-12 text-brand-accent animate-spin mb-4" />
-                <p className="text-brand-ink-soft dark:text-dark-ink-soft font-bold uppercase tracking-widest text-[10px]">Cargando materiales...</p>
-              </div>
+              <MaterialSkeleton />
             ) : Object.keys(materials).length > 0 ? (
               sortedUnitKeys.map((unitTitle, unitIdx) => {
                 const normalizedSearch = search.toLowerCase().trim();
                 const filteredFiles = materials[unitTitle].filter(f =>
                   f.title.toLowerCase().includes(normalizedSearch) ||
-                  unitTitle.toLowerCase().includes(normalizedSearch)
+                  unitTitle.toLowerCase().includes(normalizedSearch),
                 );
 
                 if (filteredFiles.length === 0 && normalizedSearch) return null;
@@ -237,23 +244,18 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
                     key={unitTitle}
                     unitTitle={unitTitle}
                     resources={filteredFiles}
-                    viewMode="grid"
                     index={unitIdx}
                     onViewPDF={(url: string, title: string) => setViewingPDF({ url, title })}
                   />
                 );
               })
             ) : (
-              <div className="text-center py-32 opacity-50 bg-brand-bg-2/20 dark:bg-dark-bg-2/20 rounded-[3rem] border-2 border-dashed border-brand-stroke/30 dark:border-dark-stroke/30">
-                <FileText className="w-16 h-16 mx-auto mb-6 text-brand-ink-soft/20 dark:text-dark-ink-soft/20" />
-                <p className="text-2xl font-serif font-bold text-brand-ink/40 dark:text-dark-ink/50">No se encontró material educativo.</p>
-              </div>
+              <EmptyState icon={FileText} message="No se encontró material educativo." />
             )}
           </div>
         )}
       </div>
 
-      {/* PDF Viewer Modal */}
       {viewingPDF && (
         <PDFViewer
           url={viewingPDF.url}
@@ -262,17 +264,82 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
         />
       )}
 
-      {/* Video Player Modal */}
       {selectedVideo && (
         <VideoPlayer
           video={selectedVideo}
           currentIndex={selectedIndex + 1}
           totalCount={filteredVideos.length}
           onClose={() => setSelectedIndex(-1)}
-          onNext={selectedIndex < filteredVideos.length - 1 ? handleNext : undefined}
-          onPrev={selectedIndex > 0 ? handlePrev : undefined}
+          onNext={selectedIndex < filteredVideos.length - 1 ? () => setSelectedIndex(i => i + 1) : undefined}
+          onPrev={selectedIndex > 0 ? () => setSelectedIndex(i => i - 1) : undefined}
         />
       )}
+    </div>
+  );
+}
+
+function FilterSelect({
+  value, onChange, options, ariaLabel,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+  ariaLabel: string;
+}) {
+  return (
+    <div className="relative flex-1 md:flex-none">
+      <select
+        aria-label={ariaLabel}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="appearance-none w-full md:w-auto pl-3.5 pr-9 py-2.5 sm:py-3 bg-brand-bg-1/50 dark:bg-dark-bg-1/50 border border-brand-stroke dark:border-dark-stroke rounded-xl text-sm font-medium text-brand-ink dark:text-dark-ink cursor-pointer focus:outline-none focus:border-brand-accent dark:focus:border-dark-accent focus:ring-4 focus:ring-brand-accent-ring dark:focus:ring-dark-accent-ring transition-all"
+      >
+        {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+      </select>
+      <svg
+        aria-hidden
+        viewBox="0 0 12 12"
+        className="absolute right-3 top-1/2 -translate-y-1/2 w-3 h-3 text-brand-ink-soft dark:text-dark-ink-soft pointer-events-none"
+        fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+      >
+        <path d="M3 4.5 L6 7.5 L9 4.5" />
+      </svg>
+    </div>
+  );
+}
+
+function EmptyState({ icon: Icon, message }: { icon: React.ElementType; message: string }) {
+  return (
+    <div className="col-span-full text-center py-20 sm:py-28 bg-brand-bg-2/40 dark:bg-dark-bg-2/30 rounded-3xl border border-dashed border-brand-stroke dark:border-dark-stroke">
+      <Icon className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-4 text-brand-ink-faint dark:text-dark-ink-faint" strokeWidth={1.5} />
+      <p className="font-serif text-lg sm:text-xl text-brand-ink-soft dark:text-dark-ink-soft">{message}</p>
+    </div>
+  );
+}
+
+function MaterialSkeleton() {
+  return (
+    <div className="space-y-4">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <div
+          key={i}
+          className="relative overflow-hidden bg-brand-bg-2/60 dark:bg-dark-bg-2/40 border border-brand-stroke dark:border-dark-stroke rounded-2xl p-5 sm:p-6"
+          style={{ animationDelay: `${i * 100}ms` }}
+        >
+          <div className="flex items-center justify-between">
+            <div className="space-y-2 flex-1">
+              <div className="h-3 w-24 bg-brand-stroke dark:bg-dark-stroke rounded-full" />
+              <div className="h-6 w-2/3 bg-brand-stroke dark:bg-dark-stroke rounded-md" />
+            </div>
+            <div className="w-10 h-10 bg-brand-stroke dark:bg-dark-stroke rounded-xl" />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 dark:via-white/5 to-transparent bg-[length:200%_100%] animate-shimmer pointer-events-none" />
+        </div>
+      ))}
+      <div className="flex items-center justify-center gap-3 py-6">
+        <Loader2 className="w-4 h-4 text-brand-accent dark:text-dark-accent animate-spin" />
+        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-brand-ink-soft dark:text-dark-ink-soft">Cargando material</p>
+      </div>
     </div>
   );
 }
