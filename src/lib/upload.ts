@@ -7,10 +7,10 @@ import { Resource } from './resources';
 // Base class — download from Moodle + filename/folder helpers
 // ─────────────────────────────────────────────────────────────
 export class UploadFiles {
-  protected moodleSession: string;
+  protected cookieHeader: string;
 
-  constructor(moodleSession: string) {
-    this.moodleSession = moodleSession;
+  constructor(cookieHeader: string) {
+    this.cookieHeader = cookieHeader;
   }
 
   protected getFilename(resource: Resource): string {
@@ -42,7 +42,7 @@ export class UploadFiles {
     console.log(`[UploadFiles] Downloading from: ${url}`);
     const res = await fetch(url, {
       headers: {
-        Cookie: `MoodleSession=${this.moodleSession}`,
+        Cookie: this.cookieHeader,
         'User-Agent':
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36',
       },
@@ -66,8 +66,8 @@ export class UploadFiles {
 export class UploadFilesDrive extends UploadFiles {
   private rootFolderId: string;
 
-  constructor(moodleSession: string) {
-    super(moodleSession);
+  constructor(cookieHeader: string) {
+    super(cookieHeader);
     if (!ENV.GOOGLE.DRIVE_FOLDER_ID) {
       throw new Error('GOOGLE_DRIVE_FOLDER_ID is not set.');
     }

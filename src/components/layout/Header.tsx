@@ -8,21 +8,22 @@ import { useEffect, useState } from 'react';
 import { useToast } from '@/components/ui/Toast';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useGlobalOverlay } from '@/components/ui/GlobalOverlay';
+import { useMaterials } from '@/components/material/MaterialsProvider';
 import { clsx } from 'clsx';
 
 interface HeaderProps {
   username?: string;
   isAdmin?: boolean;
-  admin?: string;
 }
 
-export function Header({ username, isAdmin, admin }: HeaderProps) {
+export function Header({ username, isAdmin }: HeaderProps) {
   const [syncing, setSyncing] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const { loading, update } = useToast();
   const overlay = useGlobalOverlay();
+  const { refresh: refreshMaterials } = useMaterials();
 
   // Lock body scroll while drawer open
   useEffect(() => {
@@ -38,12 +39,9 @@ export function Header({ username, isAdmin, admin }: HeaderProps) {
     setSyncing(true);
     const toastId = loading('Sincronizando material', 'Buscando archivos en Drive…');
     try {
-      const res = await fetch('/api/admin/resources', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ admin }),
-      });
+      const res = await fetch('/api/admin/resources', { method: 'POST' });
       if (res.ok) {
+        await refreshMaterials();
         update(toastId, {
           variant: 'success',
           title: 'Material actualizado',

@@ -18,15 +18,14 @@ export interface Section {
   resources: Resource[];
 }
 
-export async function scrapeResources(moodleSessionCookie?: string): Promise<Section[]> {
+export async function scrapeResources(cookieHeader: string): Promise<Section[]> {
   try {
-    // 1. Fetch course page
     const courseUrl = `${AULAS_URL}/course/view.php?id=${COURSE_ID}`;
-    console.log(`[Scraper] Fetching resources with session: ${moodleSessionCookie ? moodleSessionCookie.substring(0, 10) + '...' : 'NONE'}`);
-    
+    console.log(`[Scraper] Fetching resources (cookie header ${cookieHeader ? 'present' : 'EMPTY'})`);
+
     const response = await fetch(courseUrl, {
       headers: {
-        'Cookie': moodleSessionCookie ? `MoodleSession=${moodleSessionCookie}` : '',
+        'Cookie': cookieHeader,
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36',
       },
     });

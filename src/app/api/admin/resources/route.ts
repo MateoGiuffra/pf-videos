@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAuth } from '@/lib/auth';
+import { verifyAuth, requireAdmin, getMoodleCookieHeader } from '@/lib/auth';
 import { scrapeResources } from '@/lib/resources';
 import { UploadFilesDrive } from '@/lib/upload';
-import { cookies } from 'next/headers';
-import { ENV } from '@/config/env';
 
 /**
  * GET /api/admin/resources
@@ -11,7 +9,6 @@ import { ENV } from '@/config/env';
  */
 export async function GET(req: NextRequest) {
   try {
-    // 1. Verify Authentication
     const user = await verifyAuth();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -63,44 +60,24 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    // 1. Verify Authentication (JWT)
-    const user = await verifyAuth();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const auth = await requireAdmin();
+    if ('error' in auth) return auth.error;
 
-    // 2. Verify admin name passed by the client matches the server-side ADMIN env var
-    const body = await req.json().catch(() => ({}));
-    const { admin } = body as { admin?: string };
-
-    if (!admin || !ENV.ADMIN || admin !== ENV.ADMIN) {
-      return NextResponse.json({ error: 'Forbidden: admin access only' }, { status: 403 });
-    }
-
-    // 3. Get Moodle Session
-    const cookieStore = await cookies();
-    const moodleSession = cookieStore.get('moodle_session')?.value;
-    console.log(
-      `[Admin Resources API] Session found: ${moodleSession ? 'YES (' + moodleSession.substring(0, 8) + '...)' : 'NO'}`
-    );
-
-    if (!moodleSession) {
+    const cookieHeader = await getMoodleCookieHeader();
+    if (!cookieHeader.includes('MoodleSession')) {
       return NextResponse.json(
         { error: 'No se encontró la sesión de Moodle. Por favor, inicia sesión.' },
         { status: 400 }
       );
     }
 
-    // 3. Scrape Resources from Moodle
-    const sections = await scrapeResources(moodleSession);
+    const sections = await scrapeResources(cookieHeader);
     const allResources = sections.flatMap((s) => s.resources);
 
     console.log(`[Admin Resources Sync] Starting sync for ${allResources.length} resources...`);
 
-    // 4. Initialize Drive Uploader
-    const uploader = new UploadFilesDrive(moodleSession);
+    const uploader = new UploadFilesDrive(cookieHeader);
 
-    // 5. Sync each resource sequentially (avoids rate-limit issues)
     const results = [];
     for (const resource of allResources) {
       try {
@@ -129,11 +106,8 @@ export async function POST(req: NextRequest) {
  */
 export async function DELETE(req: NextRequest) {
   try {
-    // 1. Verify Authentication
-    const user = await verifyAuth();
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const auth = await requireAdmin();
+    if ('error' in auth) return auth.error;
 
     const uploader = new UploadFilesDrive('');
     await uploader.clearAll();

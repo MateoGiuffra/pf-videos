@@ -2,6 +2,7 @@ import { ENV } from '@/config/env';
 import * as cheerio from 'cheerio';
 import * as jose from 'jose';
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 const JWT_SECRET = new TextEncoder().encode(ENV.JWT_SECRET);
 const AULAS_URL = ENV.AULAS_URL;
@@ -168,37 +169,37 @@ export async function verifyAuth() {
   }
 }
 
-/**
- * Returns true if the current Moodle session belongs to the admin user.
- * Fetches /user/profile.php and compares the h1 against the ADMIN env var.
- */
 export async function checkIsAdmin(): Promise<boolean> {
-  const admin = ENV.ADMIN;
-  if (!admin) return false;
+  if (!ENV.ADMIN) return false;
+  const user = await verifyAuth();
+  return !!user && user.username === ENV.ADMIN;
+}
 
-  try {
-    const cookieStore = await cookies();
-    const moodleSession = cookieStore.get('moodle_session')?.value;
-    if (!moodleSession) return false;
+/**
+ * Builds the full Cookie header string from every `moodle_c_*` cookie we
+ * persisted at login. Needed for any request to Moodle: the actual session
+ * cookie name is site-specific (e.g. `MoodleSessionaulas`) and Moodle also
+ * needs the `MOODLEID*` cookie or it bounces back to /login in a redirect loop.
+ */
+export async function getMoodleCookieHeader(): Promise<string> {
+  const cookieStore = await cookies();
+  return cookieStore
+    .getAll()
+    .filter((c) => c.name.startsWith('moodle_c_'))
+    .map((c) => `${c.name.replace('moodle_c_', '')}=${c.value}`)
+    .join('; ');
+}
 
-    const res = await fetch(`${AULAS_URL}/user/profile.php`, {
-      headers: {
-        Cookie: `MoodleSession=${moodleSession}`,
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      },
-      // Cache for 60s to avoid re-fetching on fast navigations
-      next: { revalidate: 60 },
-    });
-
-    if (!res.ok) return false;
-
-    const html = await res.text();
-    const $ = cheerio.load(html);
-    const h1Text = $('h1').first().text().trim();
-
-    return h1Text === admin;
-  } catch {
-    return false;
+export async function requireAdmin(): Promise<
+  { user: { username: string } } | { error: NextResponse }
+> {
+  const user = await verifyAuth();
+  if (!user) {
+    return { error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) };
   }
+  if (!ENV.ADMIN || user.username !== ENV.ADMIN) {
+    return { error: NextResponse.json({ error: 'Forbidden: admin access only' }, { status: 403 }) };
+  }
+  return { user };
 }
 

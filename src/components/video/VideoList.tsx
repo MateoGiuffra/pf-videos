@@ -7,6 +7,7 @@ import { VideoPlayer } from '@/components/video/VideoPlayer';
 import { PracticeVideo, TheoryVideo } from '@/lib/data';
 import { downloadAllAsZipWithFolders } from '@/lib/zip';
 import { useToast } from '@/components/ui/Toast';
+import { useMaterials } from '@/components/material/MaterialsProvider';
 import { clsx } from 'clsx';
 import { BookOpen, Download, FileText, Loader2, PenTool, Search, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
@@ -31,29 +32,15 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
   const [selectedCuatri, setSelectedCuatri] = useState<string>('all');
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
-  const [materials, setMaterials] = useState<Record<string, any[]>>({});
-  const [loadingMaterials, setLoadingMaterials] = useState(false);
+  const { materials, loading: loadingMaterials, ensureLoaded } = useMaterials();
   const [downloadingAll, setDownloadingAll] = useState(false);
   const [viewingPDF, setViewingPDF] = useState<{ url: string; title: string } | null>(null);
 
-  const { loading, update, error: toastError } = useToast();
+  const { loading, update } = useToast();
 
   useEffect(() => {
-    if (activeTab === 'material' && Object.keys(materials).length === 0) {
-      setLoadingMaterials(true);
-      fetch('/api/admin/resources')
-        .then(res => res.json())
-        .then(data => {
-          if (data.error) {
-            toastError('No pudimos cargar el material', data.error);
-          } else {
-            setMaterials(data);
-          }
-        })
-        .catch(() => toastError('Error al cargar material', 'Revisá tu conexión.'))
-        .finally(() => setLoadingMaterials(false));
-    }
-  }, [activeTab, materials, toastError]);
+    if (activeTab === 'material') ensureLoaded();
+  }, [activeTab, ensureLoaded]);
 
   const sortedUnitKeys = useMemo(() => {
     return Object.keys(materials).sort((a, b) => {
