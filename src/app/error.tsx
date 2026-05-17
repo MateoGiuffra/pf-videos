@@ -18,7 +18,7 @@ export default function Error({ error, reset }: ErrorProps) {
     <div className="min-h-dvh flex flex-col items-center justify-center px-4">
       <div className="relative flex flex-col items-center text-center max-w-md animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="relative">
-          <div className="absolute inset-0 bg-brand-danger/20 blur-2xl rounded-full" />
+          <div className="absolute inset-0 bg-brand-danger/20 dark:bg-dark-danger/20 blur-2xl rounded-full" />
           <div className="relative w-14 h-14 rounded-2xl bg-brand-danger-soft dark:bg-dark-danger-soft border border-brand-danger/20 dark:border-dark-danger/20 flex items-center justify-center">
             <AlertTriangle className="w-6 h-6 text-brand-danger dark:text-dark-danger" strokeWidth={2.2} />
           </div>
