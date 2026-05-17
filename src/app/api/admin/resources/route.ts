@@ -26,22 +26,28 @@ export async function GET(req: NextRequest) {
       const unitName = file.folderName || 'Otros';
       if (!units[unitName]) units[unitName] = [];
 
-      const nameWithExt = file.name.toLowerCase().endsWith('.pdf')
+      const lowerName = file.name.toLowerCase();
+      const isMd = lowerName.endsWith('.md') || file.mimeType === 'text/markdown';
+      const isPdf = lowerName.endsWith('.pdf') || file.mimeType === 'application/pdf';
+      const kind: 'md' | 'pdf' = isMd ? 'md' : 'pdf';
+
+      const nameWithExt = isPdf || isMd
         ? file.name
         : `${file.name}.pdf`;
 
       units[unitName].push({
         id: file.id,
         title: nameWithExt,
+        kind,
         // Drive file ID used by the view proxy
         driveId: file.id,
         // webContentLink can serve as a fallback direct link (requires auth)
         url: file.webContentLink || file.webViewLink,
         bytes: file.size || 0,
         created_at: file.createdTime,
-        type: file.name.toLowerCase().includes('practica')
+        type: lowerName.includes('practica')
           ? 'practice'
-          : file.name.toLowerCase().includes('teorica')
+          : lowerName.includes('teorica')
           ? 'theory'
           : 'other',
       });

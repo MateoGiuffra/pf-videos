@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, BookOpen, PenTool, File, Download, Eye, Loader2 } from 'lucide-react';
+import { ChevronDown, BookOpen, PenTool, File, FileCode2, Download, Eye, Loader2 } from 'lucide-react';
 import { downloadAllAsZip } from '@/lib/zip';
 import { useToast } from '@/components/ui/Toast';
 import { clsx } from 'clsx';
@@ -10,7 +10,12 @@ interface ResourceSectionProps {
   unitTitle: string;
   resources: any[];
   index: number;
-  onViewPDF: (url: string, title: string) => void;
+  onViewPDF: (url: string, title: string, kind?: 'pdf' | 'md') => void;
+}
+
+function getKind(resource: any): 'pdf' | 'md' {
+  if (resource.kind === 'md' || resource.kind === 'pdf') return resource.kind;
+  return resource.title?.toLowerCase().endsWith('.md') ? 'md' : 'pdf';
 }
 
 export function ResourceSection({ unitTitle, resources, index, onViewPDF }: ResourceSectionProps) {
@@ -22,10 +27,14 @@ export function ResourceSection({ unitTitle, resources, index, onViewPDF }: Reso
     e.stopPropagation();
     if (downloading) return;
     setDownloading(true);
-    const files = resources.map(r => ({
-      name: `${r.title}.pdf`,
-      url: `/api/resources/view?id=${encodeURIComponent(r.driveId)}&filename=${encodeURIComponent(r.title)}&download=true`,
-    }));
+    const files = resources.map(r => {
+      const lower = (r.title || '').toLowerCase();
+      const hasExt = lower.endsWith('.pdf') || lower.endsWith('.md');
+      return {
+        name: hasExt ? r.title : `${r.title}.pdf`,
+        url: `/api/resources/view?id=${encodeURIComponent(r.driveId)}&filename=${encodeURIComponent(r.title)}&download=true`,
+      };
+    });
     const toastId = loading(`Preparando ${unitTitle}`, `Empaquetando ${files.length} archivo${files.length === 1 ? '' : 's'}…`);
     downloadAllAsZip(files, unitTitle, {
       onProgress: (c, t) => update(toastId, { description: `Descargando ${c} de ${t}…` }),
@@ -121,6 +130,7 @@ export function ResourceSection({ unitTitle, resources, index, onViewPDF }: Reso
                 onView={() => onViewPDF(
                   `/api/resources/view?id=${encodeURIComponent(resource.driveId)}&filename=${encodeURIComponent(resource.title)}`,
                   resource.title,
+                  getKind(resource),
                 )}
               />
             ))}
@@ -134,9 +144,10 @@ export function ResourceSection({ unitTitle, resources, index, onViewPDF }: Reso
 function ResourceCard({ resource, onView }: { resource: any; onView: () => void }) {
   const isPractice = resource.type === 'practice';
   const isTheory = resource.type === 'theory';
+  const isMd = getKind(resource) === 'md';
 
-  const Icon = isPractice ? PenTool : isTheory ? BookOpen : File;
-  const label = isPractice ? 'Práctica' : isTheory ? 'Teoría' : 'Recurso';
+  const Icon = isMd ? FileCode2 : isPractice ? PenTool : isTheory ? BookOpen : File;
+  const label = isMd ? 'Markdown' : isPractice ? 'Práctica' : isTheory ? 'Teoría' : 'Recurso';
 
   const downloadUrl = `/api/resources/view?id=${encodeURIComponent(resource.driveId)}&filename=${encodeURIComponent(resource.title)}&download=true`;
 

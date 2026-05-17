@@ -35,15 +35,19 @@ export async function GET(req: NextRequest) {
 
     const buffer = Buffer.from(response.data as ArrayBuffer);
 
+    const lower = filename.toLowerCase();
+    const isMd = lower.endsWith('.md');
+    const contentType = isMd ? 'text/markdown; charset=utf-8' : 'application/pdf';
+
     // 3. Stream back to the client
     return new Response(buffer, {
       status: 200,
       headers: {
-        'Content-Type': 'application/pdf',
+        'Content-Type': contentType,
         'Content-Disposition': isDownload
           ? `attachment; filename="${encodeURIComponent(filename)}"`
           : `inline; filename="${encodeURIComponent(filename)}"`,
-        'Cache-Control': 'private, max-age=3600',
+        'Cache-Control': 'private, max-age=60',
       },
     });
   } catch (error: any) {

@@ -202,11 +202,12 @@ export class UploadFilesDrive extends UploadFiles {
     const folders = foldersRes.data.files || [];
     const results: any[] = [];
 
-    // 2. For each subfolder list its files
+    // 2. For each subfolder list its files (we filter PDFs and Markdown in code
+    //    because Drive's combined mimeType/`name contains` queries can be flaky).
     for (const folder of folders) {
       const filesRes = await drive.files.list({
-        q: `'${folder.id}' in parents and trashed=false and mimeType='application/pdf'`,
-        fields: 'files(id, name, size, createdTime, webViewLink, webContentLink)',
+        q: `'${folder.id}' in parents and trashed=false and mimeType!='application/vnd.google-apps.folder'`,
+        fields: 'files(id, name, mimeType, size, createdTime, webViewLink, webContentLink)',
         includeItemsFromAllDrives: true,
         supportsAllDrives: true,
         spaces: 'drive',
@@ -214,10 +215,17 @@ export class UploadFilesDrive extends UploadFiles {
       });
 
       const files = filesRes.data.files || [];
+      let acceptedInFolder = 0;
       for (const file of files) {
+        const lowerName = file.name?.toLowerCase() || '';
+        const isMd = lowerName.endsWith('.md') || file.mimeType === 'text/markdown';
+        const isPdf = lowerName.endsWith('.pdf') || file.mimeType === 'application/pdf';
+        if (!isMd && !isPdf) continue;
+        acceptedInFolder++;
         results.push({
           id: file.id,
           name: file.name,
+          mimeType: file.mimeType,
           folderId: folder.id,
           folderName: folder.name,
           size: file.size ? parseInt(file.size) : 0,
@@ -226,6 +234,7 @@ export class UploadFilesDrive extends UploadFiles {
           webContentLink: file.webContentLink,
         });
       }
+      console.log(`[Drive listAll] ${folder.name}: ${files.length} listed, ${acceptedInFolder} accepted (md/pdf)`);
     }
 
     return results;

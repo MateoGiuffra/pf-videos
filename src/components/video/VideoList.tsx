@@ -1,16 +1,16 @@
 'use client';
 
+import { useMaterials } from '@/components/material/MaterialsProvider';
+import { useToast } from '@/components/ui/Toast';
 import { PDFViewer } from '@/components/video/PDFViewer';
 import { ResourceSection } from '@/components/video/ResourceSection';
 import { VideoItem } from '@/components/video/VideoItem';
 import { VideoPlayer } from '@/components/video/VideoPlayer';
 import { PracticeVideo, TheoryVideo } from '@/lib/data';
 import { downloadAllAsZipWithFolders } from '@/lib/zip';
-import { useToast } from '@/components/ui/Toast';
-import { useMaterials } from '@/components/material/MaterialsProvider';
 import { clsx } from 'clsx';
 import { BookOpen, Download, FileText, Loader2, PenTool, Search, X } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 interface VideoListProps {
   practiceVideos: PracticeVideo[];
@@ -25,8 +25,11 @@ const TABS: { id: Tab; label: string; short: string; icon: React.ElementType }[]
   { id: 'material', label: 'Material', short: 'Material', icon: FileText },
 ];
 
+const ACTIVE_TAB_STORAGE_KEY = 'pf-videos:activeTab';
+const isTab = (v: unknown): v is Tab => v === 'practice' || v === 'theory' || v === 'material';
+
 export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
-  const [activeTab, setActiveTab] = useState<Tab>('practice');
+  const [activeTab, setActiveTabState] = useState<Tab>('practice');
   const [search, setSearch] = useState('');
   const [selectedYear, setSelectedYear] = useState<string>('all');
   const [selectedCuatri, setSelectedCuatri] = useState<string>('all');
@@ -34,13 +37,44 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
 
   const { materials, loading: loadingMaterials, ensureLoaded } = useMaterials();
   const [downloadingAll, setDownloadingAll] = useState(false);
-  const [viewingPDF, setViewingPDF] = useState<{ url: string; title: string } | null>(null);
+  const [viewingPDF, setViewingPDF] = useState<{ url: string; title: string; kind?: 'pdf' | 'md' } | null>(null);
+
+  // Hydrate from localStorage on mount only — never write in an effect, since
+  // Strict Mode would re-run effects and the write would clobber the read.
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(ACTIVE_TAB_STORAGE_KEY);
+      if (isTab(stored)) setActiveTabState(stored);
+    } catch { /* localStorage unavailable */ }
+  }, []);
+
+  const setActiveTab = (tab: Tab) => {
+    setActiveTabState(tab);
+    try {
+      localStorage.setItem(ACTIVE_TAB_STORAGE_KEY, tab);
+    } catch { /* localStorage unavailable */ }
+  };
 
   const { loading, update } = useToast();
 
   useEffect(() => {
     if (activeTab === 'material') ensureLoaded();
   }, [activeTab, ensureLoaded]);
+
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<Record<Tab, HTMLButtonElement | null>>({ practice: null, theory: null, material: null });
+  const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null);
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const el = tabRefs.current[activeTab];
+      if (!el) return;
+      setIndicator({ left: el.offsetLeft, width: el.offsetWidth });
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [activeTab]);
 
   const sortedUnitKeys = useMemo(() => {
     return Object.keys(materials).sort((a, b) => {
@@ -79,10 +113,14 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
 
     const unitMap: Record<string, { name: string; url: string }[]> = {};
     for (const unitTitle of sortedUnitKeys) {
-      unitMap[unitTitle] = (materials[unitTitle] || []).map(f => ({
-        name: f.title.endsWith('.pdf') ? f.title : `${f.title}.pdf`,
-        url: `/api/resources/view?id=${encodeURIComponent(f.driveId)}&filename=${encodeURIComponent(f.title)}&download=true`,
-      }));
+      unitMap[unitTitle] = (materials[unitTitle] || []).map(f => {
+        const lower = f.title.toLowerCase();
+        const hasExt = lower.endsWith('.pdf') || lower.endsWith('.md');
+        return {
+          name: hasExt ? f.title : `${f.title}.pdf`,
+          url: `/api/resources/view?id=${encodeURIComponent(f.driveId)}&filename=${encodeURIComponent(f.title)}&download=true`,
+        };
+      });
     }
 
     const total = Object.values(unitMap).flat().length;
@@ -113,8 +151,8 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
             type="text"
             placeholder={
               activeTab === 'practice' ? 'Buscar por título o fecha…' :
-              activeTab === 'theory' ? 'Buscar por título…' :
-              '¿Qué material estás buscando?'
+                activeTab === 'theory' ? 'Buscar por título…' :
+                  '¿Qué material estás buscando?'
             }
             className="w-full pl-10 pr-9 py-2.5 sm:py-3 bg-brand-bg-1/50 dark:bg-dark-bg-1/50 border border-brand-stroke dark:border-dark-stroke focus:bg-brand-bg-2 dark:focus:bg-dark-bg-2 rounded-xl text-sm sm:text-[15px] text-brand-ink dark:text-dark-ink placeholder:text-brand-ink-faint dark:placeholder:text-dark-ink-faint focus:outline-none focus:border-brand-accent dark:focus:border-dark-accent focus:ring-4 focus:ring-brand-accent-ring dark:focus:ring-dark-accent-ring transition-all"
             value={search}
@@ -156,18 +194,29 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
       {/* Tabs — horizontal scroll on mobile, centered pills on md+ */}
       <div className="-mx-4 sm:mx-0 overflow-x-auto no-scrollbar">
         <div className="flex justify-start sm:justify-center px-4 sm:px-0">
-          <div className="inline-flex p-1 bg-brand-bg-2/70 dark:bg-dark-bg-2/70 rounded-2xl border border-brand-stroke dark:border-dark-stroke backdrop-blur-md shadow-sm">
+          <div
+            ref={tabsContainerRef}
+            className="relative inline-flex p-1 bg-brand-bg-2/70 dark:bg-dark-bg-2/70 rounded-2xl border border-brand-stroke dark:border-dark-stroke backdrop-blur-md shadow-sm"
+          >
+            {indicator && (
+              <div
+                aria-hidden="true"
+                className="absolute top-1 bottom-1 bg-brand-accent dark:bg-dark-accent rounded-xl shadow-md shadow-brand-accent/25 dark:shadow-dark-accent/25 transition-[left,width] duration-500 ease-[cubic-bezier(0.4,0.0,0.2,1)] will-change-[left,width]"
+                style={{ left: indicator.left, width: indicator.width }}
+              />
+            )}
             {TABS.map((tab) => {
               const active = activeTab === tab.id;
               const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
+                  ref={(el) => { tabRefs.current[tab.id] = el; }}
                   onClick={() => setActiveTab(tab.id)}
                   className={clsx(
-                    'flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 whitespace-nowrap active:scale-[0.97]',
+                    'relative z-10 flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors duration-100 whitespace-nowrap active:scale-[0.97]',
                     active
-                      ? 'bg-brand-accent dark:bg-dark-accent text-white shadow-md shadow-brand-accent/25 dark:shadow-dark-accent/25'
+                      ? 'text-white'
                       : 'text-brand-ink-soft dark:text-dark-ink-soft hover:text-brand-ink dark:hover:text-dark-ink',
                   )}
                 >
@@ -232,7 +281,7 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
                     unitTitle={unitTitle}
                     resources={filteredFiles}
                     index={unitIdx}
-                    onViewPDF={(url: string, title: string) => setViewingPDF({ url, title })}
+                    onViewPDF={(url: string, title: string, kind?: 'pdf' | 'md') => setViewingPDF({ url, title, kind })}
                   />
                 );
               })
@@ -247,6 +296,7 @@ export function VideoList({ practiceVideos, theoryVideos }: VideoListProps) {
         <PDFViewer
           url={viewingPDF.url}
           title={viewingPDF.title}
+          kind={viewingPDF.kind}
           onClose={() => setViewingPDF(null)}
         />
       )}
